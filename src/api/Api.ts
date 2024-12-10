@@ -58,7 +58,7 @@ class Api {
     return data;
   }
 
-  async revokeApiKey(id: string) {
+  async revokeApiKey(id: number) {
     const { data } = await axios.put(`/api-keys/${id}/revoke`);
     return data;
   }
@@ -164,7 +164,6 @@ class Api {
     return data;
   }
 
-
   async resendVerificationEmail(code: string | null) {
     if (code) {
       const { data } = await axios.post('/users/resend-email-verification-by-code', { code });
@@ -179,7 +178,6 @@ class Api {
     const { data } = await axios.post('/users/verify-email', { code });
     return data;
   }
-
 }
 
 export const api = new Api();

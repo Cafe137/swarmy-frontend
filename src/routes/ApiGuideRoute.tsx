@@ -1,10 +1,10 @@
 import { Alert, Flex, Select, Space, Stack, Text } from '@mantine/core';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { stackoverflowDark as theme } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { config } from '../config.tsx';
-import { useQuery } from '@tanstack/react-query';
 import { api } from '../api/Api.ts';
-import { useState } from 'react';
+import { config } from '../config.tsx';
 
 export default function ApiGuideRoute() {
   const downloadEndpoint = `${config.apiUrl}/files`;
@@ -38,7 +38,7 @@ export default function ApiGuideRoute() {
       <Flex justify={'flex-end'} mr={'lg'}>
         <Stack gap={'xs'}>
           <Text>Key to use:</Text>
-          <Select w={250} data={isSuccess ? data.map((d) => d.key) : []} value={apiKey} onChange={setApiKey} />
+          <Select w={250} data={isSuccess ? data.map((d) => d.apiKey) : []} value={apiKey} onChange={setApiKey} />
         </Stack>
       </Flex>
 

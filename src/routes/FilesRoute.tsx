@@ -1,4 +1,3 @@
-import { FileUploader } from '../FileUploader.tsx';
 import {
   ActionIcon,
   Alert,
@@ -16,6 +15,7 @@ import {
   Text,
   Tooltip,
 } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import {
   IconAlertTriangle,
   IconCheck,
@@ -25,14 +25,14 @@ import {
   IconFileTypeHtml,
   IconUpload,
 } from '@tabler/icons-react';
-import { useDisclosure } from '@mantine/hooks';
 import { useQueries, useQueryClient } from '@tanstack/react-query';
 import { api } from '../api/Api.ts';
-import { formatBytes } from '../FileSizeFormatter.ts';
-import classes from './FilesRoute.module.css';
 import { Date } from '../components/Date.tsx';
 import { config } from '../config.tsx';
+import { formatBytes } from '../FileSizeFormatter.ts';
+import { FileUploader } from '../FileUploader.tsx';
 import { useProfileStore } from '../store/ProfileStore.ts';
+import classes from './FilesRoute.module.css';
 
 export default function FilesRoute() {
   const [opened, { open, close }] = useDisclosure(false);
@@ -71,13 +71,13 @@ export default function FilesRoute() {
     if (isWebsite) {
       url = `${url}/`;
     }
-    url = `${url}?k=${firstKey.key}`;
+    url = `${url}?k=${firstKey.apiKey}`;
     window.open(url, '_blank');
   }
 
   function getFileLink(hash: string) {
     const firstKey = apiKeysQuery.data[0];
-    return `${config.apiUrl}/files/${hash}?k=${firstKey.key}`;
+    return `${config.apiUrl}/files/${hash}?k=${firstKey.apiKey}`;
   }
 
   function UploadDisabledAlert() {
@@ -86,7 +86,9 @@ export default function FilesRoute() {
     }
     return (
       <Alert py={'sm'} mb={'xl'} icon={<IconAlertTriangle />} variant={'filled'} color={'yellow.8'} fw={600}>
-        {(postageBatchStatus === null || postageBatchStatus === 'REMOVED') && <Text>Subscription needed to upload files.</Text>}
+        {(postageBatchStatus === null || postageBatchStatus === 'REMOVED') && (
+          <Text>Subscription needed to upload files.</Text>
+        )}
         {postageBatchStatus === 'CREATING' && (
           <Text>Connecting your account with Swarm. This can take up to a few minutes.</Text>
         )}
@@ -149,7 +151,7 @@ export default function FilesRoute() {
                 </Table.Thead>
                 <Table.Tbody>
                   {fileReferencesQuery.data.map((file) => (
-                    <Table.Tr key={file._id}>
+                    <Table.Tr key={file.id}>
                       <Table.Td>
                         <Center>{getThumbnail(file)}</Center>
                       </Table.Td>
