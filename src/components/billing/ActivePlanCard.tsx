@@ -1,27 +1,27 @@
 import { ActionIcon, Alert, Button, Card, Group, Menu, Modal, rem, Skeleton, Text, Title } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 import { IconAlertTriangle, IconCheck, IconSettings, IconTrash, IconX } from '@tabler/icons-react';
 import { useState } from 'react';
 import { api } from '../../api/Api.ts';
-import { notifications } from '@mantine/notifications';
-import { Plan } from './Plan.tsx';
 import { Date } from '../Date.tsx';
+import { Plan } from './Plan.tsx';
 
 interface ActivePlanCardProps {
   isLoading: boolean;
   plan: Plan;
-  onCancelled: () => void
+  onCancelled: () => void;
 }
 
 export function ActivePlanCard({ plan, isLoading, onCancelled }: ActivePlanCardProps) {
   const [modalOpened, setModalOpened] = useState(false);
 
   function getStorageCapacity() {
-    const gbs = plan.quotas.uploadSizeLimit / 1024 / 1024 / 1024;
+    const gbs = plan.uploadSizeLimit / 1024 / 1024 / 1024;
     return `${gbs.toFixed(0)} GB`;
   }
 
   function getBandwidth() {
-    const gbs = plan.quotas.downloadSizeLimit / 1024 / 1024 / 1024;
+    const gbs = plan.downloadSizeLimit / 1024 / 1024 / 1024;
     return `${gbs.toFixed(0)} GB`;
   }
 
@@ -34,7 +34,7 @@ export function ActivePlanCard({ plan, isLoading, onCancelled }: ActivePlanCardP
         icon: <IconCheck style={{ width: rem(20), height: rem(20) }} />,
         color: 'green',
       });
-      onCancelled && onCancelled()
+      onCancelled && onCancelled();
       setModalOpened(false);
     } catch (e) {
       console.log(e);
@@ -59,7 +59,7 @@ export function ActivePlanCard({ plan, isLoading, onCancelled }: ActivePlanCardP
   }
 
   function isConfigMenuVisible() {
-    return !isFreePlan() && !plan.cancelAt
+    return !isFreePlan() && !plan.cancelAt;
   }
 
   return (
@@ -137,13 +137,13 @@ export function ActivePlanCard({ plan, isLoading, onCancelled }: ActivePlanCardP
             <Text fw={600}>Price: </Text>
             {priceLabel()}
           </Group>
-          {plan.cancelAt &&
+          {plan.cancelAt && (
             <Alert py={'sm'} mt={'lg'} icon={<IconAlertTriangle />} variant={'filled'} color={'orange.6'} fw={600}>
               Your plan is active until <Date value={plan.cancelAt} />.
-              <br/>
+              <br />
               After that, you won't be able to use the service and your data will be removed.
             </Alert>
-          }
+          )}
         </>
       )}
     </Card>

@@ -1,11 +1,11 @@
 import { Button, Card, Container, rem, ScrollArea, Space, Text, Title } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import { IconX } from '@tabler/icons-react';
 import { useQueries } from '@tanstack/react-query';
-import { api } from '../../api/Api.ts';
 import { useEffect, useState } from 'react';
+import { api } from '../../api/Api.ts';
 import { ActivePlanCard } from './ActivePlanCard.tsx';
-import { SubscriptionSlider } from './SubscriptionSlider.tsx';
 import { BillingConfiguratorSkeleton } from './BillingConfiguratorSkeleton.tsx';
-import { SubscriptionSummary } from './SubscriptionSummary.tsx';
 import {
   getBandwidthByExp,
   getBandwidthBySize,
@@ -13,8 +13,8 @@ import {
   getStorageCapacityBySize,
   SubscriptionConfig,
 } from './SubscriptionConfig.ts';
-import { notifications } from '@mantine/notifications';
-import { IconX } from '@tabler/icons-react';
+import { SubscriptionSlider } from './SubscriptionSlider.tsx';
+import { SubscriptionSummary } from './SubscriptionSummary.tsx';
 
 export function PlanConfigurator() {
   const [capacity, setCapacity] = useState(NaN);
@@ -79,7 +79,7 @@ export function PlanConfigurator() {
   }
 
   function getSubscribedStorageCapacity() {
-    const subscribedValue = activePlanQuery.data.quotas.uploadSizeLimit / 1024 / 1024 / 1024;
+    const subscribedValue = activePlanQuery.data.uploadSizeLimit / 1024 / 1024 / 1024;
     if (subscribedValue === 0) {
       return 0;
     }
@@ -87,7 +87,7 @@ export function PlanConfigurator() {
   }
 
   function getSubscribedBandwidth() {
-    const subscribedValue = activePlanQuery.data.quotas.downloadSizeLimit / 1024 / 1024 / 1024;
+    const subscribedValue = activePlanQuery.data.downloadSizeLimit / 1024 / 1024 / 1024;
     if (subscribedValue === 0) {
       return 0;
     }
