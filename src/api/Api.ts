@@ -83,7 +83,6 @@ class Api {
     const { data } = await axios.post('/api/files', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        // 'Authorization': 'Bearer 3f98e83f1ffce3794afb4'
       },
     });
     return data;
