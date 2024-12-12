@@ -3,8 +3,15 @@ import { create } from 'zustand';
 interface ProfileState {
   email: string | null;
   emailVerified: boolean;
-  organizationId: string | null;
-  postageBatchStatus: null | 'CREATING' | 'CREATED' | 'FAILED_TO_CREATE' | 'FAILED_TO_TOP_UP' | 'FAILED_TO_DILUTE' | 'REMOVED';
+  organizationId: number | null;
+  postageBatchStatus:
+    | null
+    | 'CREATING'
+    | 'CREATED'
+    | 'FAILED_TO_CREATE'
+    | 'FAILED_TO_TOP_UP'
+    | 'FAILED_TO_DILUTE'
+    | 'REMOVED';
   setProfile: (profile: ProfileState) => void;
   setEmailVerified: (verified: boolean) => void;
   clear: () => void;

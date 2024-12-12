@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 
 interface AuthState {
   accessToken: string | null;
-  organizationId: string | null;
+  organizationId: number | null;
   setAccessToken: (token: string) => void;
   signedIn: () => boolean;
   clear: () => void;

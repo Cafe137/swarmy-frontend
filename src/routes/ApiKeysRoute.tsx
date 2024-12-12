@@ -1,10 +1,10 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { api } from '../api/Api.ts';
 import { ActionIcon, Button, Flex, Group, Modal, rem, Table } from '@mantine/core';
-import { IconCheck, IconPlus, IconTrash, IconX } from '@tabler/icons-react';
-import { notifications } from '@mantine/notifications';
 import { useDisclosure } from '@mantine/hooks';
+import { notifications } from '@mantine/notifications';
+import { IconCheck, IconPlus, IconTrash, IconX } from '@tabler/icons-react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { api } from '../api/Api.ts';
 import { Date } from '../components/Date.tsx';
 
 export default function ApiKeysRoute() {
@@ -94,8 +94,8 @@ export default function ApiKeysRoute() {
               </Table.Thead>
               <Table.Tbody>
                 {data.map((key) => (
-                  <Table.Tr key={key._id}>
-                    <Table.Td>{key.key}</Table.Td>
+                  <Table.Tr key={key.id}>
+                    <Table.Td>{key.apiKey}</Table.Td>
                     <Table.Td>
                       <Date value={key.createdAt} />
                     </Table.Td>
@@ -105,7 +105,7 @@ export default function ApiKeysRoute() {
                         disabled={key.status !== 'ACTIVE'}
                         variant={'subtle'}
                         onClick={() => {
-                          setIdToRevoke(key._id);
+                          setIdToRevoke(key.id);
                           openModal();
                         }}
                       >
