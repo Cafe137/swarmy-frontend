@@ -34,7 +34,7 @@ export default function ApiGuideRoute() {
 
   return (
     <>
-      <h1>Api guide</h1>
+      <h1>API guide</h1>
       <Flex justify={'flex-end'} mr={'lg'}>
         <Stack gap={'xs'}>
           <Text>Key to use:</Text>

@@ -7,6 +7,14 @@ export function Footer() {
       <Flex p={20} justify={'end'}>
         {/*<Logo ml={10} c={'dimmed'} size={24} />*/}
         <Flex gap={'xs'} align={'center'}>
+          <Anchor size={'sm'} component={RouterNavLink} to={'https://discord.gg/ApzRhVbZq4'} target="_blank">
+            Discord
+          </Anchor>
+
+          <Text size={'sm'} c={'gray.5'}>
+            |
+          </Text>
+
           <Anchor size={'sm'} component={RouterNavLink} to={'/faq'}>
             FAQ
           </Anchor>

@@ -1,10 +1,10 @@
-import { AppShell, Burger, em, Flex, Group, Image, NavLink, Space, Title } from '@mantine/core';
+import { AppShell, Burger, em, Flex, Group, NavLink, Space } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
-import { NavLink as RouterNavLink } from 'react-router-dom';
 import { IconChartBar, IconCode, IconFileInvoice, IconFileStack, IconKey } from '@tabler/icons-react';
-import UserMenu from './UserMenu.tsx';
-import { Logo } from './Logo.tsx';
+import { NavLink as RouterNavLink } from 'react-router-dom';
 import { AppIcon } from './AppIcon.tsx';
+import { Logo } from './Logo.tsx';
+import UserMenu from './UserMenu.tsx';
 
 export default function LoggedInLayout({ children }) {
   const [opened, { toggle }] = useDisclosure();
@@ -25,11 +25,15 @@ export default function LoggedInLayout({ children }) {
         <AppShell.Header style={{ boxShadow: '#00000066 0px 5px 10px -4px' }} withBorder={false}>
           <Flex mt={6} justify="space-between" align="center" px={'md'}>
             <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-            {isMobile ? <>
-              <Group gap={8}>
-                <Logo w={100} />
-              </Group>
-            </> : <div></div>}
+            {isMobile ? (
+              <>
+                <Group gap={8}>
+                  <Logo w={100} />
+                </Group>
+              </>
+            ) : (
+              <div></div>
+            )}
 
             {/*<Flex justify="flex-end" align="center" gap={12}>*/}
             {/*<ThemeSwitcher />*/}
@@ -71,14 +75,14 @@ export default function LoggedInLayout({ children }) {
             component={RouterNavLink}
             onClick={toggle}
             to={'/app/api-keys'}
-            label="Api keys"
+            label="API keys"
             leftSection={<IconKey size="1.5rem" stroke={1.5} />}
           />
           <NavLink
             component={RouterNavLink}
             onClick={toggle}
             to={'/app/api-guide'}
-            label="Api guide"
+            label="API guide"
             leftSection={<IconCode size="1.5rem" stroke={1.5} />}
           />
           <NavLink

@@ -63,7 +63,7 @@ export default function ApiKeysRoute() {
 
   return (
     <>
-      <h1>Api keys</h1>
+      <h1>API keys</h1>
       <div>
         <Flex justify="flex-end" px={'lg'} py={'xl'}>
           <Button onClick={generateKey} rightSection={<IconPlus size={'1.1rem'} />}>
