@@ -94,17 +94,9 @@ export function PlanConfigurator() {
     return getBandwidthBySize(config, subscribedValue)?.exp;
   }
 
-  function onSubscriptionCancelled() {
-    activePlanQuery.refetch();
-  }
-
   return (
     <Container px={0} py="xl">
-      <ActivePlanCard
-        plan={activePlanQuery.data}
-        isLoading={activePlanQuery.isLoading}
-        onCancelled={onSubscriptionCancelled}
-      />
+      <ActivePlanCard plan={activePlanQuery.data} isLoading={activePlanQuery.isLoading} />
       <Space h="xl" />
       <ScrollArea miw={700}>
         <Card withBorder bg={'gray.8'} shadow="md" radius="md" padding="xl">

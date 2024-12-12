@@ -1,20 +1,13 @@
-import { ActionIcon, Alert, Button, Card, Group, Menu, Modal, rem, Skeleton, Text, Title } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
-import { IconAlertTriangle, IconCheck, IconSettings, IconTrash, IconX } from '@tabler/icons-react';
-import { useState } from 'react';
+import { Button, Card, Group, Skeleton, Space, Text, Title } from '@mantine/core';
 import { api } from '../../api/Api.ts';
-import { Date } from '../Date.tsx';
 import { Plan } from './Plan.tsx';
 
 interface ActivePlanCardProps {
   isLoading: boolean;
   plan: Plan;
-  onCancelled: () => void;
 }
 
-export function ActivePlanCard({ plan, isLoading, onCancelled }: ActivePlanCardProps) {
-  const [modalOpened, setModalOpened] = useState(false);
-
+export function ActivePlanCard({ plan, isLoading }: ActivePlanCardProps) {
   function getStorageCapacity() {
     const gbs = plan.uploadSizeLimit / 1024 / 1024 / 1024;
     return `${gbs.toFixed(0)} GB`;
@@ -25,26 +18,9 @@ export function ActivePlanCard({ plan, isLoading, onCancelled }: ActivePlanCardP
     return `${gbs.toFixed(0)} GB`;
   }
 
-  async function cancelSubscription(): Promise<void> {
-    try {
-      await api.cancelSubscription();
-      notifications.show({
-        title: 'Success',
-        message: `Plan cancelled successfully`,
-        icon: <IconCheck style={{ width: rem(20), height: rem(20) }} />,
-        color: 'green',
-      });
-      onCancelled && onCancelled();
-      setModalOpened(false);
-    } catch (e) {
-      console.log(e);
-      notifications.show({
-        title: 'Failed to cancel plan',
-        message: e.message,
-        icon: <IconX style={{ width: rem(20), height: rem(20) }} />,
-        color: 'red',
-      });
-    }
+  async function manageSubscription(): Promise<void> {
+    const url = await api.manageSubscription();
+    window.location.replace(url);
   }
 
   function isFreePlan() {
@@ -56,10 +32,6 @@ export function ActivePlanCard({ plan, isLoading, onCancelled }: ActivePlanCardP
       return '0 EUR / month';
     }
     return `${plan.currency} ${plan.amount.toFixed(2)} / ${plan.frequency.toLowerCase()}`;
-  }
-
-  function isConfigMenuVisible() {
-    return !isFreePlan() && !plan.cancelAt;
   }
 
   return (
@@ -77,53 +49,6 @@ export function ActivePlanCard({ plan, isLoading, onCancelled }: ActivePlanCardP
         <>
           <Group align={'center'} gap={'xs'} mb={'md'}>
             <Title order={2}>Current plan</Title>
-
-            {isConfigMenuVisible() && (
-              <Menu shadow="md" width={200}>
-                <Menu.Target>
-                  <ActionIcon size={'sm'} c={'gray'} variant={'subtle'} mt={4}>
-                    <IconSettings />{' '}
-                  </ActionIcon>
-                </Menu.Target>
-
-                <Menu.Dropdown>
-                  <Menu.Item
-                    onClick={() => setModalOpened(true)}
-                    color="red"
-                    leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}
-                  >
-                    Cancel plan
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
-            )}
-
-            <Modal
-              size={'md'}
-              centered
-              opened={modalOpened}
-              onClose={() => setModalOpened(false)}
-              title={
-                <Text size={'xl'} fw={600}>
-                  Confirmation
-                </Text>
-              }
-            >
-              <Text mb={'xs'}>Are you sure you want to cancel the plan?</Text>
-              <Alert py={'sm'} icon={<IconAlertTriangle />} variant={'filled'} color={'red.9'} fw={600}>
-                Your existing files will be removed permanently from the network when their TTL expires.
-              </Alert>
-
-              <Alert mt={'md'} py={'sm'} icon={<IconAlertTriangle />} variant={'filled'} color={'red.9'} fw={600}>
-                You won't be able to upload new files or download existing files.
-              </Alert>
-              <Group mt={'xl'} justify="space-between">
-                <Button onClick={() => setModalOpened(false)}>No, don't cancel</Button>
-                <Button bg={'red.9'} onClick={cancelSubscription}>
-                  Yes, cancel
-                </Button>
-              </Group>
-            </Modal>
           </Group>
 
           <Group gap={'xs'}>
@@ -137,13 +62,16 @@ export function ActivePlanCard({ plan, isLoading, onCancelled }: ActivePlanCardP
             <Text fw={600}>Price: </Text>
             {priceLabel()}
           </Group>
-          {plan.cancelAt && (
-            <Alert py={'sm'} mt={'lg'} icon={<IconAlertTriangle />} variant={'filled'} color={'orange.6'} fw={600}>
-              Your plan is active until <Date value={plan.cancelAt} />.
-              <br />
-              After that, you won't be able to use the service and your data will be removed.
-            </Alert>
-          )}
+          <Space h="lg" />
+          <Text size={'sm'} c={'dimmed'}>
+            View past invoices, update payment method, or cancel subscription.
+          </Text>
+          <Text size={'sm'} c={'dimmed'}>
+            If you cancel your subscription, you will be able to use the current plan until the end of the billing
+            period.
+          </Text>
+          <Space h="xs" />
+          <Button onClick={() => manageSubscription()}>Manage</Button>
         </>
       )}
     </Card>

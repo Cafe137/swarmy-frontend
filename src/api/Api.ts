@@ -133,8 +133,8 @@ class Api {
     return data;
   }
 
-  async cancelSubscription() {
-    const { data } = await axios.post('/subscriptions/cancel');
+  async manageSubscription() {
+    const { data } = await axios.post('/subscriptions/manage');
     return data;
   }
 
