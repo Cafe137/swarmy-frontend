@@ -1,6 +1,6 @@
 import { AppShell, Burger, em, Flex, Group, NavLink, Space } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
-import { IconChartBar, IconCode, IconFileInvoice, IconFileStack, IconKey } from '@tabler/icons-react';
+import { IconBrandDiscord, IconChartBar, IconCode, IconFileInvoice, IconFileStack, IconKey } from '@tabler/icons-react';
 import { NavLink as RouterNavLink } from 'react-router-dom';
 import { AppIcon } from './AppIcon.tsx';
 import { Logo } from './Logo.tsx';
@@ -26,19 +26,13 @@ export default function LoggedInLayout({ children }) {
           <Flex mt={6} justify="space-between" align="center" px={'md'}>
             <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
             {isMobile ? (
-              <>
-                <Group gap={8}>
-                  <Logo w={100} />
-                </Group>
-              </>
+              <Group gap={8}>
+                <Logo w={100} />
+              </Group>
             ) : (
               <div></div>
             )}
-
-            {/*<Flex justify="flex-end" align="center" gap={12}>*/}
-            {/*<ThemeSwitcher />*/}
             <UserMenu />
-            {/*</Flex>*/}
           </Flex>
         </AppShell.Header>
 
@@ -91,6 +85,14 @@ export default function LoggedInLayout({ children }) {
             to={'/app/billing'}
             label="Billing"
             leftSection={<IconFileInvoice size="1.5rem" stroke={1.5} />}
+          />
+          <NavLink
+            component={RouterNavLink}
+            onClick={toggle}
+            to={'https://discord.gg/ApzRhVbZq4'}
+            target="_blank"
+            label="Discord"
+            leftSection={<IconBrandDiscord size="1.5rem" stroke={1.5} />}
           />
         </AppShell.Navbar>
 

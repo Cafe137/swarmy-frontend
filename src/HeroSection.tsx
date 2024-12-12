@@ -1,16 +1,19 @@
 import { Anchor, Button, Flex, Group, Space, Text } from '@mantine/core';
-// import image from './image.svg';
-import classes from './HeroSection.module.css';
-import { SwarmLogo } from './SwarmLogo.tsx';
-import { Logo } from './Logo.tsx';
-import { NavLink as RouterNavLink } from 'react-router-dom';
 import { useEffect } from 'react';
+import { NavLink as RouterNavLink, useLocation } from 'react-router-dom';
 import { AppIcon } from './AppIcon.tsx';
+import classes from './HeroSection.module.css';
+import { Logo } from './Logo.tsx';
+import { SwarmLogo } from './SwarmLogo.tsx';
 
 export function HeroSection() {
+  const { pathname } = useLocation();
+
   useEffect(() => {
-    console.debug('Drawing topology');
-    VANTA.TOPOLOGY({
+    if (pathname !== '/') {
+      return;
+    }
+    const effect = VANTA.TOPOLOGY({
       el: '#hero-canvas',
       mouseControls: true,
       touchControls: true,
@@ -22,7 +25,8 @@ export function HeroSection() {
       color: '#1ee783',
       backgroundColor: '#1d252c',
     });
-  }, []);
+    return () => effect.destroy();
+  }, [pathname]);
 
   return (
     <Flex>

@@ -1,25 +1,25 @@
+import { createTheme, MantineColorsTuple, MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
-import { createTheme, MantineColorsTuple, MantineProvider } from '@mantine/core';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import RootRoute from './routes/RootRoute.tsx';
-import HomeRoute from './routes/HomeRoute.tsx';
-import LoginRoute from './routes/LoginRoute.tsx';
-import FilesRoute from './routes/FilesRoute.tsx';
 import AnalyticsRoute from './routes/AnalyticsRoute.tsx';
+import ApiGuideRoute from './routes/ApiGuideRoute.tsx';
 import ApiKeysRoute from './routes/ApiKeysRoute.tsx';
 import BillingRoute from './routes/BillingRoute.tsx';
-import { ForgotPasswordRoute } from './routes/ForgotPasswordRoute.tsx';
-import SignupRoute from './routes/SignupRoute.tsx';
-import { NotFoundRoute } from './routes/NotFoundRoute.tsx';
-import ProtectedRoute from './routes/ProtectedRoute.tsx';
-import ApiGuideRoute from './routes/ApiGuideRoute.tsx';
-import PrivacyRoute from './routes/PrivacyRoute.tsx';
-import TermsOfServiceRoute from './routes/TermsOfServiceRoute.tsx';
 import ContactRoute from './routes/ContactRoute.tsx';
-import VerifyEmailRoute from './routes/VerifyEmailRoute.tsx';
-import { ResetPasswordRoute } from './routes/ResetPasswordRoute.tsx';
 import FAQRoute from './routes/FAQRoute.tsx';
+import FilesRoute from './routes/FilesRoute.tsx';
+import { ForgotPasswordRoute } from './routes/ForgotPasswordRoute.tsx';
+import HomeRoute from './routes/HomeRoute.tsx';
+import LoginRoute from './routes/LoginRoute.tsx';
+import { NotFoundRoute } from './routes/NotFoundRoute.tsx';
+import PrivacyRoute from './routes/PrivacyRoute.tsx';
+import ProtectedRoute from './routes/ProtectedRoute.tsx';
+import { ResetPasswordRoute } from './routes/ResetPasswordRoute.tsx';
+import RootRoute from './routes/RootRoute.tsx';
+import SignupRoute from './routes/SignupRoute.tsx';
+import TermsOfServiceRoute from './routes/TermsOfServiceRoute.tsx';
+import VerifyEmailRoute from './routes/VerifyEmailRoute.tsx';
 
 function App() {
   const greenColors: MantineColorsTuple = [
