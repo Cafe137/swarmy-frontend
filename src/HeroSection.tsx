@@ -5,9 +5,11 @@ import { AppIcon } from './AppIcon.tsx';
 import classes from './HeroSection.module.css';
 import { Logo } from './Logo.tsx';
 import { SwarmLogo } from './SwarmLogo.tsx';
+import { useAuthStore } from './store/AuthStore.ts';
 
 export function HeroSection() {
   const { pathname } = useLocation();
+  const signedIn = useAuthStore((state) => state.signedIn());
 
   useEffect(() => {
     if (pathname !== '/') {
@@ -61,8 +63,14 @@ export function HeroSection() {
               </Text>
 
               <Group mt={30}>
-                <Button radius="sm" size="md" className={classes.control} component={RouterNavLink} to={'/signup'}>
-                  Get started
+                <Button
+                  radius="sm"
+                  size="md"
+                  className={classes.control}
+                  component={RouterNavLink}
+                  to={signedIn ? '/app' : '/signup'}
+                >
+                  {signedIn ? 'Go to dashboard' : 'Get started'}
                 </Button>
               </Group>
             </Flex>
