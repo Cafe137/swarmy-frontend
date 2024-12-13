@@ -76,7 +76,7 @@ export default function FilesRoute() {
   }
 
   function getFileLink(hash: string) {
-    const firstKey = apiKeysQuery.data[0];
+    const firstKey = apiKeysQuery.data.find((k) => k.status === 'ACTIVE');
     return `${config.apiUrl}/files/${hash}?k=${firstKey.apiKey}`;
   }
 
