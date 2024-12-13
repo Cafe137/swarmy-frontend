@@ -31,7 +31,7 @@ export function ActivePlanCard({ plan, isLoading }: ActivePlanCardProps) {
     if (isFreePlan()) {
       return '0 EUR / month';
     }
-    return `${plan.currency} ${plan.amount.toFixed(2)} / ${plan.frequency.toLowerCase()}`;
+    return `${plan.currency} ${(plan.amount / 100).toFixed(2)} / ${plan.frequency.toLowerCase()}`;
   }
 
   return (
