@@ -37,7 +37,7 @@ import classes from './FilesRoute.module.css';
 export default function FilesRoute() {
   const [opened, { open, close }] = useDisclosure(false);
   const queryClient = useQueryClient();
-  const { postageBatchStatus } = useProfileStore();
+  const { postageBatchId } = useProfileStore();
   console.log('rendering files route');
 
   const [fileReferencesQuery, apiKeysQuery] = useQueries({
@@ -54,7 +54,7 @@ export default function FilesRoute() {
   });
 
   const isLoading = apiKeysQuery.isLoading || fileReferencesQuery.isLoading;
-  const canUpload = postageBatchStatus === 'CREATED';
+  const canUpload = !!postageBatchId;
 
   async function onUploaded() {
     await queryClient.invalidateQueries({ queryKey: ['files'] });
@@ -81,22 +81,12 @@ export default function FilesRoute() {
   }
 
   function UploadDisabledAlert() {
-    if (postageBatchStatus === 'CREATED') {
+    if (postageBatchId) {
       return;
     }
     return (
       <Alert py={'sm'} mb={'xl'} icon={<IconAlertTriangle />} variant={'filled'} color={'yellow.8'} fw={600}>
-        {(postageBatchStatus === null || postageBatchStatus === 'REMOVED') && (
-          <Text>Subscription needed to upload files.</Text>
-        )}
-        {postageBatchStatus === 'CREATING' && (
-          <Text>Connecting your account with Swarm. This can take up to a few minutes.</Text>
-        )}
-        {(postageBatchStatus === 'FAILED_TO_TOP_UP' ||
-          postageBatchStatus === 'FAILED_TO_DILUTE' ||
-          postageBatchStatus === 'FAILED_TO_CREATE') && (
-          <Text>Account issue detected. Uploading is suspended. Please contact support.</Text>
-        )}
+        {!postageBatchId && <Text>Subscription needed to upload files.</Text>}
       </Alert>
     );
   }

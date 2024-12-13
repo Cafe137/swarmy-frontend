@@ -8,7 +8,6 @@ export type Plan = {
   frequency: string;
   status: PlanStatus;
   statusReason: string;
-  cancelAt: string;
   uploadSizeLimit: number;
   uploadCountLimit: number;
   downloadSizeLimit: number;

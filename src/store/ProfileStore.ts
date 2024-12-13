@@ -4,14 +4,7 @@ interface ProfileState {
   email: string | null;
   emailVerified: boolean;
   organizationId: number | null;
-  postageBatchStatus:
-    | null
-    | 'CREATING'
-    | 'CREATED'
-    | 'FAILED_TO_CREATE'
-    | 'FAILED_TO_TOP_UP'
-    | 'FAILED_TO_DILUTE'
-    | 'REMOVED';
+  postageBatchId?: string | null;
   setProfile: (profile: ProfileState) => void;
   setEmailVerified: (verified: boolean) => void;
   clear: () => void;
@@ -20,7 +13,7 @@ interface ProfileState {
 export const useProfileStore = create<ProfileState>((set) => ({
   email: null,
   emailVerified: false,
-  postageBatchStatus: null,
+  postageBatchId: null,
   organizationId: null,
   setProfile: (profile: ProfileState) => set(() => profile),
   setEmailVerified: (verified: boolean) => set(() => ({ emailVerified: verified })),
@@ -29,6 +22,6 @@ export const useProfileStore = create<ProfileState>((set) => ({
       email: null,
       organizationId: null,
       emailVerified: false,
-      postageBatchStatus: null,
+      postageBatchId: null,
     })),
 }));
