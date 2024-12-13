@@ -38,7 +38,12 @@ export default function ApiGuideRoute() {
       <Flex justify={'flex-end'} mr={'lg'}>
         <Stack gap={'xs'}>
           <Text>Key to use:</Text>
-          <Select w={250} data={isSuccess ? data.map((d) => d.apiKey) : []} value={apiKey} onChange={setApiKey} />
+          <Select
+            w={250}
+            data={isSuccess ? data.filter((x) => x.status === 'ACTIVE').map((d) => d.apiKey) : []}
+            value={apiKey}
+            onChange={setApiKey}
+          />
         </Stack>
       </Flex>
 
