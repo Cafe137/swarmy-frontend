@@ -177,6 +177,26 @@ class Api {
     const { data } = await axios.post('/users/verify-email', { code });
     return data;
   }
+
+  async payWithCrypto(planId: number) {
+    const { data } = await axios.post(`/crypto-payments/${planId}`);
+    return data;
+  }
+
+  async getFeeds() {
+    const { data } = await axios.get('/feeds');
+    return data;
+  }
+
+  async createFeed(name: string) {
+    const { data } = await axios.post('/feeds', { name });
+    return data;
+  }
+
+  async updateFeed(feedId: number, fileId: number) {
+    const { data } = await axios.put(`/feeds/${feedId}/${fileId}`);
+    return data;
+  }
 }
 
 export const api = new Api();

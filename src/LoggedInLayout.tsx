@@ -1,6 +1,14 @@
 import { AppShell, Burger, em, Flex, Group, NavLink, Space } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
-import { IconBrandDiscord, IconChartBar, IconCode, IconFileInvoice, IconFileStack, IconKey } from '@tabler/icons-react';
+import {
+  IconBrandDiscord,
+  IconChartBar,
+  IconCode,
+  IconFileInvoice,
+  IconFileStack,
+  IconKey,
+  IconWorldWww,
+} from '@tabler/icons-react';
 import { NavLink as RouterNavLink } from 'react-router-dom';
 import { AppIcon } from './AppIcon.tsx';
 import { Logo } from './Logo.tsx';
@@ -40,23 +48,24 @@ export default function LoggedInLayout({ children }) {
           <Flex justify={'center'} align={'center'} gap={6}>
             <Group mt={10} gap={8}>
               <AppIcon s={40} />
-              <Logo w={100} mt={4} />
+              <Logo w={100} />
             </Group>
           </Flex>
 
           <Space h="xl" />
-          {/*<NavLink*/}
-          {/*    component={RouterNavLink}*/}
-          {/*    to={"/app/profile"}*/}
-          {/*    label="Profile"*/}
-          {/*    leftSection={<IconUser size="1.5rem" stroke={1.5}/>}*/}
-          {/*/>*/}
           <NavLink
             component={RouterNavLink}
             onClick={toggle}
             to={'/app/files'}
             label="Files"
             leftSection={<IconFileStack size="1.5rem" stroke={1.5} />}
+          />
+          <NavLink
+            component={RouterNavLink}
+            onClick={toggle}
+            to={'/app/feeds'}
+            label="Feeds"
+            leftSection={<IconWorldWww size="1.5rem" stroke={1.5} />}
           />
           <NavLink
             component={RouterNavLink}

@@ -1,4 +1,5 @@
-import { Button, Card, Container, rem, ScrollArea, Space, Text, Title } from '@mantine/core';
+import { Button, Card, Container, Group, rem, ScrollArea, Space, Stack, Text, Title } from '@mantine/core';
+import { openModal } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
 import { IconX } from '@tabler/icons-react';
 import { useQueries } from '@tanstack/react-query';
@@ -52,13 +53,34 @@ export function PlanConfigurator() {
     }
   }, [subscriptionConfigQuery.isSuccess, activePlanQuery.isSuccess]);
 
+  async function payWithStripe(redirectUrl: string) {
+    window.location.href = redirectUrl;
+  }
+
+  async function payWithCrypto(planId: number) {
+    const { redirectUrl } = await api.payWithCrypto(planId);
+    window.location.href = redirectUrl;
+  }
+
   async function startSubscription() {
     // todo try catch
     const requestedCapacity = getStorageCapacityByExp(config, capacity)?.size;
     const requestedBandwidth = getBandwidthByExp(config, bandwidth)?.size;
     try {
       const result = await api.startSubscription(requestedCapacity!, requestedBandwidth!);
-      window.location.href = result.redirectUrl;
+      openModal({
+        withCloseButton: true,
+        title: 'Subscription',
+        children: (
+          <Stack>
+            <Text>Choose payment method:</Text>
+            <Group>
+              <Button onClick={() => payWithStripe(result.redirectUrl)}>Stripe</Button>
+              <Button onClick={() => payWithCrypto(result.planId)}>Crypto</Button>
+            </Group>
+          </Stack>
+        ),
+      });
     } catch (e) {
       console.log(e);
       notifications.show({
@@ -155,8 +177,9 @@ export function PlanConfigurator() {
               <Space h="xl" />
 
               <Text size={'sm'} c={'dimmed'}>
-                After clicking the Subscribe button, you will be redirected to Stripe's payment form to create a monthly
-                subscription.
+                After clicking the Purchase button, you will be prompted to select a payment method to complete your
+                order. By selecting Stripe, you will be redirected to Stripe's payment form to create a monthly
+                subscription. The Crypto option will create a one-time payment using the Coinbase Commerce service.
                 <br />
                 You can cancel the subscription anytime, you will be able to access the paid services until the end of
                 the billing period.
@@ -164,7 +187,7 @@ export function PlanConfigurator() {
               <Space h="lg" />
 
               <Button disabled={!isLoaded || (!isUpgrade() && !isFreePlan())} onClick={() => startSubscription()}>
-                {isFreePlan() ? 'Subscribe' : 'Upgrade Subscription'}
+                {isFreePlan() ? 'Purchase' : 'Upgrade Subscription'}
               </Button>
             </>
           )}

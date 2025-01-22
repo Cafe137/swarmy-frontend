@@ -5,7 +5,7 @@ interface DateProps {
 }
 
 export function Date({ value }: DateProps) {
-  const formatted = value ? format(value, "yyyy. MM. dd. HH:mm") : ''
+  const formatted = value ? format(value, 'yyyy. MM. dd. HH:mm') : '';
   return (
     <>
       <span>{formatted}</span>

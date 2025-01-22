@@ -1,5 +1,6 @@
 import { createTheme, MantineColorsTuple, MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
+import { ModalsProvider } from '@mantine/modals';
 import '@mantine/notifications/styles.css';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import AnalyticsRoute from './routes/AnalyticsRoute.tsx';
@@ -8,6 +9,7 @@ import ApiKeysRoute from './routes/ApiKeysRoute.tsx';
 import BillingRoute from './routes/BillingRoute.tsx';
 import ContactRoute from './routes/ContactRoute.tsx';
 import FAQRoute from './routes/FAQRoute.tsx';
+import FeedsRoute from './routes/FeedsRoute.tsx';
 import FilesRoute from './routes/FilesRoute.tsx';
 import { ForgotPasswordRoute } from './routes/ForgotPasswordRoute.tsx';
 import HomeRoute from './routes/HomeRoute.tsx';
@@ -82,32 +84,35 @@ function App() {
 
   return (
     <MantineProvider defaultColorScheme={'dark'} forceColorScheme={'dark'} theme={theme}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<RootRoute />}>
-            <Route index element={<HomeRoute />} />
-            <Route path="login" element={<LoginRoute />} />
-            <Route path="privacy" element={<PrivacyRoute />} />
-            <Route path="terms-of-service" element={<TermsOfServiceRoute />} />
-            <Route path="contact" element={<ContactRoute />} />
-            <Route path="faq" element={<FAQRoute />} />
-            <Route path="forgot-password" element={<ForgotPasswordRoute />} />
-            <Route path="reset-password" element={<ResetPasswordRoute />} />
-            <Route path="signup" element={<SignupRoute />} />
-            <Route path="verify" element={<VerifyEmailRoute />} />
+      <ModalsProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<RootRoute />}>
+              <Route index element={<HomeRoute />} />
+              <Route path="login" element={<LoginRoute />} />
+              <Route path="privacy" element={<PrivacyRoute />} />
+              <Route path="terms-of-service" element={<TermsOfServiceRoute />} />
+              <Route path="contact" element={<ContactRoute />} />
+              <Route path="faq" element={<FAQRoute />} />
+              <Route path="forgot-password" element={<ForgotPasswordRoute />} />
+              <Route path="reset-password" element={<ResetPasswordRoute />} />
+              <Route path="signup" element={<SignupRoute />} />
+              <Route path="verify" element={<VerifyEmailRoute />} />
 
-            <Route path="app" element={<ProtectedRoute />}>
-              <Route index element={<Navigate to="files" />} />
-              <Route path="files" element={<FilesRoute />} />
-              <Route path="analytics" element={<AnalyticsRoute />} />
-              <Route path="api-keys" element={<ApiKeysRoute />} />
-              <Route path="api-guide" element={<ApiGuideRoute />} />
-              <Route path="billing" element={<BillingRoute />} />
+              <Route path="app" element={<ProtectedRoute />}>
+                <Route index element={<Navigate to="files" />} />
+                <Route path="files" element={<FilesRoute />} />
+                <Route path="feeds" element={<FeedsRoute />} />
+                <Route path="analytics" element={<AnalyticsRoute />} />
+                <Route path="api-keys" element={<ApiKeysRoute />} />
+                <Route path="api-guide" element={<ApiGuideRoute />} />
+                <Route path="billing" element={<BillingRoute />} />
+              </Route>
+              <Route path="*" element={<NotFoundRoute />} />
             </Route>
-            <Route path="*" element={<NotFoundRoute />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+          </Routes>
+        </BrowserRouter>
+      </ModalsProvider>
     </MantineProvider>
   );
 }

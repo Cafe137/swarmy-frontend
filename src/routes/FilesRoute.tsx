@@ -148,7 +148,7 @@ export default function FilesRoute() {
                       <Table.Td>{file.name}</Table.Td>
                       <Table.Td>
                         <Flex align={'center'}>
-                          <span className={classes.hash}>{file.hash}</span>
+                          <span className={classes.hash}>{file.hash || 'In upload queue...'}</span>
                           <Tooltip label={hasKey() ? 'Open' : 'Create API key to Open'} withArrow position="right">
                             <ActionIcon
                               disabled={!hasKey()}
