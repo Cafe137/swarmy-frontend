@@ -97,7 +97,7 @@ export default function FeedsRoute() {
                 {data.map((feed) => (
                   <Table.Tr key={feed.id}>
                     <Table.Td>{feed.name}</Table.Td>
-                    <Table.Td>{feed.feedAddress || 'N/A'}</Table.Td>
+                    <Table.Td>{feed.manifestAddress || 'N/A'}</Table.Td>
                     <Table.Td>{feed.lastBzzAddress || 'N/A'}</Table.Td>
                     <Table.Td align={'center'} width={'80px'}>
                       <ActionIcon
