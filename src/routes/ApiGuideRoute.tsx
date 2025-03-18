@@ -6,10 +6,15 @@ import { stackoverflowDark as theme } from 'react-syntax-highlighter/dist/esm/st
 import { api } from '../api/Api.ts';
 import { config } from '../config.tsx';
 
+const downloadEndpoint = `${config.apiUrl}/files`;
+const uploadEndpoint = `${config.apiUrl}/api/files`;
+const binaryUploadEndpoint = `${config.apiUrl}/api/data/bin`;
+const utf8UploadEndpoint = `${config.apiUrl}/api/data/utf8`;
+
 export default function ApiGuideRoute() {
-  const downloadEndpoint = `${config.apiUrl}/files`;
-  const uploadEndpoint = `${config.apiUrl}/api/files`;
   const [apiKey, setApiKey] = useState<string | null>('YOUR_API_KEY');
+  const [uploadType, setUploadType] = useState<string | null>('Binary');
+  const [httpClient, setHttpClient] = useState<string | null>('Axios');
 
   const { isSuccess, data } = useQuery({
     queryKey: ['api-keys'],
@@ -32,6 +37,82 @@ export default function ApiGuideRoute() {
     return `curl -H "Authorization: Bearer ${apiKey}" "${uploadEndpoint}"`;
   }
 
+  function getJavaScriptUpload() {
+    if (httpClient === 'Fetch') {
+      if (uploadType === 'Binary') {
+        return `const API_KEY = '${apiKey}';
+
+const response = await fetch(\`${binaryUploadEndpoint}?k=\${API_KEY}\`, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        name: 'filename.bin',
+        contentType: 'application/octet-stream',
+        base64: buffer.toString('base64')
+    })
+});
+const json = await response.json();
+console.log(json);`;
+      } else {
+        return `const API_KEY = '${apiKey}';
+
+const response = await fetch(\`${utf8UploadEndpoint}?k=\${API_KEY}\`, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        name: ${uploadType === 'Utf8' ? `'filename.txt'` : `'filename.json'`},
+        contentType: ${uploadType === 'Utf8' ? `'text/plain'` : `'application/json'`},
+        utf8: ${uploadType === 'Utf8' ? `'Hello, world!'` : 'JSON.stringify({ key: "value" })'}
+    })
+});
+const json = await response.json();
+console.log(json);`;
+      }
+    } else {
+      if (uploadType === 'Binary') {
+        return `const API_KEY = '${apiKey}';
+
+const response = await axios.post(\`${binaryUploadEndpoint}?k=\${API_KEY}\`, {
+    name: 'filename.bin',
+    contentType: 'application/octet-stream',
+    base64: buffer.toString('base64'),
+})
+console.log(response.json())`;
+      } else {
+        return `const API_KEY = '${apiKey}';
+
+const response = await axios.post(\`${utf8UploadEndpoint}?k=\${API_KEY}\`, {
+    name: '${uploadType === 'Utf8' ? 'filename.txt' : 'filename.json'}',
+    contentType: '${uploadType === 'Utf8' ? 'text/plain' : 'application/json'}',
+    utf8: ${uploadType === 'Utf8' ? "'Hello, world!'" : 'JSON.stringify({ key: "value" })'},
+})
+console.log(response.json())`;
+      }
+    }
+  }
+
+  function getJavaScriptDownload() {
+    if (httpClient === 'Fetch') {
+      return `const API_KEY = '${apiKey}';
+
+const response = await fetch(\`https://api.swarmy.cloud/files/\${reference}?k=\${API_KEY}\`)
+if (!response.ok) {
+    throw Error(\`Failed to fetch reference \${reference}: \${response.statusText}\`)
+}
+// use response.json(), response.blob(), or response.text() to get the data you expect`;
+    } else {
+      return `const API_KEY = '\${apiKey}';
+
+const response = await axios.get(\`https://api.swarmy.cloud/files/\${reference}?k=\${API_KEY}\`)
+// response.data holds the file data
+`;
+    }
+  }
+
   return (
     <>
       <h1>API guide</h1>
@@ -47,30 +128,38 @@ export default function ApiGuideRoute() {
         </Stack>
       </Flex>
 
-      <h2>Upload a file</h2>
-      <SyntaxHighlighter language="bash" style={theme}>
-        {getBashFileUpload()}
-      </SyntaxHighlighter>
+      <h2>Upload data with JavaScript</h2>
 
-      <div>Or with JavaScript</div>
+      <Stack gap={'xs'} mb={24}>
+        <Text>Data type</Text>
+        <Select w={250} data={['Binary', 'Utf8', 'JSON']} value={uploadType} onChange={setUploadType} />
+      </Stack>
+
+      <Stack gap={'xs'} mb={24}>
+        <Text>HTTP client</Text>
+        <Select w={250} data={['Axios', 'Fetch']} value={httpClient} onChange={setHttpClient} />
+      </Stack>
 
       <SyntaxHighlighter language="javascript" style={theme}>
-        {`import * as fs from 'node:fs';
-import axios from 'axios';
+        {getJavaScriptUpload()}
+      </SyntaxHighlighter>
 
-const API_KEY = '${apiKey}';
-const buffer = fs.readFileSync('path/to/file');
-const blob = new Blob([buffer]);
-const file = new File([blob], 'yourFileName.png')
-const formData = new FormData();
-formData.append('file', file);
+      <Text>Response:</Text>
+      <SyntaxHighlighter language="json" style={theme}>
+        {'{ "id": 1, "swarmReference": "10a73599366736e2b7a9b3a2bf2ef61f45a74486cf9153ed294bd87ae5b20883" }'}
+      </SyntaxHighlighter>
 
-await axios.post('${uploadEndpoint}', formData, {
-    headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': \`Bearer \${API_KEY}\`
-    }
-})`}
+      <h2>Download data with JavaScript</h2>
+
+      <SyntaxHighlighter language="javascript" style={theme}>
+        {getJavaScriptDownload()}
+      </SyntaxHighlighter>
+
+      <Space h={'lg'} />
+
+      <h2>Upload a file with curl</h2>
+      <SyntaxHighlighter language="bash" style={theme}>
+        {getBashFileUpload()}
       </SyntaxHighlighter>
 
       <Space h={'lg'} />
