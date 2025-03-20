@@ -81,7 +81,7 @@ const response = await axios.post(\`${binaryUploadEndpoint}?k=\${API_KEY}\`, {
     contentType: 'application/octet-stream',
     base64: buffer.toString('base64'),
 })
-console.log(response.json())`;
+console.log(response.data)`;
       } else {
         return `const API_KEY = '${apiKey}';
 
@@ -90,7 +90,7 @@ const response = await axios.post(\`${utf8UploadEndpoint}?k=\${API_KEY}\`, {
     contentType: '${uploadType === 'Utf8' ? 'text/plain' : 'application/json'}',
     utf8: ${uploadType === 'Utf8' ? "'Hello, world!'" : 'JSON.stringify({ key: "value" })'},
 })
-console.log(response.json())`;
+console.log(response.data)`;
       }
     }
   }
