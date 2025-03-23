@@ -77,17 +77,6 @@ class Api {
     return data;
   }
 
-  async uploadFileApi(file: File) {
-    const formData = new FormData();
-    formData.append('file', file);
-    const { data } = await axios.post('/api/files', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return data;
-  }
-
   async getFileReferences() {
     const { data } = await axios.get('/file-references');
     return data;

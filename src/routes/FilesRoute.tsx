@@ -23,16 +23,17 @@ import {
   IconExternalLink,
   IconFileDigit,
   IconFileTypeHtml,
+  IconShieldShare,
   IconUpload,
+  IconWorldShare,
 } from '@tabler/icons-react';
 import { useQueries, useQueryClient } from '@tanstack/react-query';
+import { Numbers } from 'cafe-utility';
 import { api } from '../api/Api.ts';
 import { Date } from '../components/Date.tsx';
 import { config } from '../config.tsx';
-import { formatBytes } from '../FileSizeFormatter.ts';
 import { FileUploader } from '../FileUploader.tsx';
 import { useProfileStore } from '../store/ProfileStore.ts';
-import classes from './FilesRoute.module.css';
 
 export default function FilesRoute() {
   const [opened, { open, close }] = useDisclosure(false);
@@ -72,6 +73,11 @@ export default function FilesRoute() {
       url = `${url}/`;
     }
     url = `${url}?k=${firstKey.apiKey}`;
+    window.open(url, '_blank');
+  }
+
+  function openOnSwarmGateway(hash: string) {
+    const url = `https://api.gateway.ethswarm.org/bzz/${hash}/`;
     window.open(url, '_blank');
   }
 
@@ -131,12 +137,13 @@ export default function FilesRoute() {
               <Table verticalSpacing={'md'}>
                 <Table.Thead>
                   <Table.Tr>
-                    <Table.Th>Thumbnail</Table.Th>
+                    <Table.Th>Icon</Table.Th>
                     <Table.Th>Name</Table.Th>
-                    <Table.Th>Hash</Table.Th>
+                    <Table.Th>Reference</Table.Th>
+                    <Table.Th>Actions</Table.Th>
                     <Table.Th>Size</Table.Th>
-                    <Table.Th>Content-Type</Table.Th>
-                    <Table.Th>Date Uploaded</Table.Th>
+                    <Table.Th>Type</Table.Th>
+                    <Table.Th>Date</Table.Th>
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
@@ -146,41 +153,61 @@ export default function FilesRoute() {
                         <Center>{getThumbnail(file)}</Center>
                       </Table.Td>
                       <Table.Td>{file.name}</Table.Td>
+                      <Table.Td>{file.hash.slice(0, 8) + '…' + file.hash.slice(-8)}</Table.Td>
                       <Table.Td>
-                        <Flex align={'center'}>
-                          <span className={classes.hash}>{file.hash || 'In upload queue...'}</span>
-                          <Tooltip label={hasKey() ? 'Open' : 'Create API key to Open'} withArrow position="right">
-                            <ActionIcon
-                              disabled={!hasKey()}
-                              variant={'subtle'}
-                              color={'gray'}
-                              onClick={() => openFile(file.hash, file.isWebsite)}
-                            >
-                              <IconExternalLink style={{ width: rem(16) }} />
-                            </ActionIcon>
-                          </Tooltip>
-                          {hasKey() ? (
-                            <CopyButton value={getFileLink(file.hash)}>
-                              {({ copied, copy }) => (
-                                <Tooltip label={copied ? 'Copied' : 'Copy'} withArrow position="right">
-                                  <ActionIcon color={copied ? 'teal' : 'gray'} variant="subtle" onClick={copy}>
-                                    {copied ? (
-                                      <IconCheck style={{ width: rem(16) }} />
-                                    ) : (
-                                      <IconCopy style={{ width: rem(16) }} />
-                                    )}
-                                  </ActionIcon>
-                                </Tooltip>
-                              )}
-                            </CopyButton>
-                          ) : (
-                            <></>
+                        <CopyButton value={file.hash}>
+                          {({ copied, copy }) => (
+                            <Tooltip label={copied ? 'Copied' : 'Copy'} withArrow position="right">
+                              <ActionIcon color={copied ? 'teal' : 'gray'} variant="subtle" onClick={copy}>
+                                {copied ? (
+                                  <IconCheck style={{ width: rem(16) }} />
+                                ) : (
+                                  <IconCopy style={{ width: rem(16) }} />
+                                )}
+                              </ActionIcon>
+                            </Tooltip>
                           )}
-                        </Flex>
+                        </CopyButton>
+                        <Tooltip label={'View on official Swarm gateway'} withArrow position="right">
+                          <ActionIcon variant={'subtle'} color={'gray'} onClick={() => openOnSwarmGateway(file.hash)}>
+                            <IconWorldShare style={{ width: rem(16) }} />
+                          </ActionIcon>
+                        </Tooltip>
+                        <Tooltip label={hasKey() ? 'Open' : 'Create API key to Open'} withArrow position="right">
+                          <ActionIcon
+                            disabled={!hasKey()}
+                            variant={'subtle'}
+                            color={'gray'}
+                            onClick={() => openFile(file.hash, file.isWebsite)}
+                          >
+                            <IconExternalLink style={{ width: rem(16) }} />
+                          </ActionIcon>
+                        </Tooltip>
+                        {hasKey() ? (
+                          <CopyButton value={getFileLink(file.hash)}>
+                            {({ copied, copy }) => (
+                              <Tooltip
+                                label={copied ? 'Copied' : 'Copy full URL with API key'}
+                                withArrow
+                                position="right"
+                              >
+                                <ActionIcon color={copied ? 'teal' : 'gray'} variant="subtle" onClick={copy}>
+                                  {copied ? (
+                                    <IconCheck style={{ width: rem(16) }} />
+                                  ) : (
+                                    <IconShieldShare style={{ width: rem(16) }} />
+                                  )}
+                                </ActionIcon>
+                              </Tooltip>
+                            )}
+                          </CopyButton>
+                        ) : (
+                          <></>
+                        )}
                       </Table.Td>
-                      <Table.Td>{formatBytes(file.size)}</Table.Td>
+                      <Table.Td>{Numbers.convertBytes(file.size, 1000)}</Table.Td>
                       <Table.Td>{file.contentType}</Table.Td>
-                      <Table.Td width={'80px'}>
+                      <Table.Td>
                         <Date value={file.createdAt} />
                       </Table.Td>
                     </Table.Tr>

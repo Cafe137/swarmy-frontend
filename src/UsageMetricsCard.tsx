@@ -1,5 +1,5 @@
 import { Card, Center, Group, RingProgress, Stack, Text } from '@mantine/core';
-import { formatBytes } from './FileSizeFormatter.ts';
+import { Numbers } from 'cafe-utility';
 import classes from './UsageMetricsCard.module.css';
 
 interface UsageMetricsCardProps {
@@ -52,10 +52,10 @@ export function UsageMetricsCard({ title, description, value, limit, valueType }
 
           <Stack gap="0">
             <Text size="xs" fw={700}>
-              {valueType === 'BYTES' ? formatBytes(value) : value}
+              {valueType === 'BYTES' ? Numbers.convertBytes(value, 1000) : value}
             </Text>
             <Text c="dimmed" fw={500} size="xs">
-              of {valueType === 'BYTES' ? formatBytes(limit) : limit}
+              of {valueType === 'BYTES' ? Numbers.convertBytes(limit, 1000) : limit}
             </Text>
           </Stack>
         </Stack>

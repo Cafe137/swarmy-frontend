@@ -1,4 +1,3 @@
-import { useRef, useState } from 'react';
 import {
   Button,
   Center,
@@ -12,14 +11,13 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { Dropzone } from '@mantine/dropzone';
-import { IconCheck, IconCloudUpload, IconDownload, IconX } from '@tabler/icons-react';
-import classes from './FileUploader.module.css';
 import { useForm } from '@mantine/form';
-import { api } from './api/Api.ts';
 import { notifications } from '@mantine/notifications';
-import { formatBytes } from './FileSizeFormatter.ts';
-import { Simulate } from 'react-dom/test-utils';
-import load = Simulate.load;
+import { IconCheck, IconCloudUpload, IconDownload, IconX } from '@tabler/icons-react';
+import { Numbers } from 'cafe-utility';
+import { useRef, useState } from 'react';
+import { api } from './api/Api.ts';
+import classes from './FileUploader.module.css';
 
 interface FormValues {
   files: File[];
@@ -38,13 +36,12 @@ export function FileUploader({ onUploaded }: FileUploaderProps) {
   });
   const [uploadAsWebsite, setUploadAsWebsite] = useState(false);
 
-
   function isSelectedFileTar() {
-    return form.values.files && form.values.files[0].name.endsWith(".tar")
+    return form.values.files && form.values.files[0].name.endsWith('.tar');
   }
   const selectedFiles = form.values.files.map((file, index) => (
     <Text key={file.name}>
-      <b>{file.name}</b> {formatBytes(file.size)}
+      <b>{file.name}</b> {Numbers.convertBytes(file.size, 1000)}
       <CloseButton
         size="xs"
         onClick={() =>
@@ -58,7 +55,7 @@ export function FileUploader({ onUploaded }: FileUploaderProps) {
   ));
 
   async function submit() {
-    setLoading(true)
+    setLoading(true);
     try {
       await api.uploadFile(form.values.files[0], uploadAsWebsite);
       notifications.show({
@@ -69,7 +66,7 @@ export function FileUploader({ onUploaded }: FileUploaderProps) {
       });
       onUploaded && onUploaded();
     } catch (e) {
-      console.log(e)
+      console.log(e);
       notifications.show({
         title: 'Upload failed',
         message: e.response && e.response.data ? e.response.data.message : e.message,
@@ -77,7 +74,7 @@ export function FileUploader({ onUploaded }: FileUploaderProps) {
         color: 'red',
       });
     }
-    setLoading(false)
+    setLoading(false);
   }
 
   return (
@@ -94,24 +91,13 @@ export function FileUploader({ onUploaded }: FileUploaderProps) {
             <div style={{ pointerEvents: 'none' }}>
               <Group justify="center">
                 <Dropzone.Accept>
-                  <IconDownload
-                    style={{ width: rem(50), height: rem(50) }}
-                    color={theme.colors.blue[6]}
-                    stroke={1.5}
-                  />
+                  <IconDownload style={{ width: rem(50), height: rem(50) }} color={theme.colors.blue[6]} stroke={1.5} />
                 </Dropzone.Accept>
                 <Dropzone.Reject>
-                  <IconX
-                    style={{ width: rem(50), height: rem(50) }}
-                    color={theme.colors.red[6]}
-                    stroke={1.5}
-                  />
+                  <IconX style={{ width: rem(50), height: rem(50) }} color={theme.colors.red[6]} stroke={1.5} />
                 </Dropzone.Reject>
                 <Dropzone.Idle>
-                  <IconCloudUpload
-                    style={{ width: rem(50), height: rem(50) }}
-                    stroke={1.5}
-                  />
+                  <IconCloudUpload style={{ width: rem(50), height: rem(50) }} stroke={1.5} />
                 </Dropzone.Idle>
               </Group>
 
@@ -127,12 +113,7 @@ export function FileUploader({ onUploaded }: FileUploaderProps) {
           </Dropzone>
 
           <Center>
-            <Button
-              className={classes.control}
-              size="md"
-              radius="xl"
-              onClick={() => openRef.current?.()}
-            >
+            <Button className={classes.control} size="md" radius="xl" onClick={() => openRef.current?.()}>
               Select files
             </Button>
           </Center>
@@ -155,14 +136,16 @@ export function FileUploader({ onUploaded }: FileUploaderProps) {
             <Checkbox
               mt="lg"
               ml="md"
-              label={"Upload as website"}
+              label={'Upload as website'}
               checked={uploadAsWebsite}
               onChange={(event) => setUploadAsWebsite(event.currentTarget.checked)}
             />
           )}
 
           <Center mt={'xl'}>
-            <Button loading={loading} onClick={submit}>Upload</Button>
+            <Button loading={loading} onClick={submit}>
+              Upload
+            </Button>
           </Center>
         </>
       )}

@@ -1,7 +1,7 @@
 import { Button, Card, Checkbox, Group, Loader, Stack, Text } from '@mantine/core';
+import { Numbers } from 'cafe-utility';
 import { useEffect, useState } from 'react';
 import { api } from '../../api/Api';
-import { formatBytes } from '../../FileSizeFormatter';
 
 interface SwarmyFile {
   id: number;
@@ -53,7 +53,7 @@ export function FilePicker({ onValue }: Props) {
                 {value.contentType}
               </Text>
               <Text size="sm" c="dimmed">
-                {formatBytes(value.size)}
+                {Numbers.convertBytes(value.size, 1000)}
               </Text>
             </Stack>
             <Button mt="lg" onClick={() => onValue(value.id)}>
