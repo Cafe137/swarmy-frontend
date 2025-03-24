@@ -23,12 +23,13 @@ import {
   IconExternalLink,
   IconFileDigit,
   IconFileTypeHtml,
-  IconShieldShare,
+  IconTrash,
   IconUpload,
   IconWorldShare,
 } from '@tabler/icons-react';
 import { useQueries, useQueryClient } from '@tanstack/react-query';
 import { Numbers } from 'cafe-utility';
+import { useState } from 'react';
 import { api } from '../api/Api.ts';
 import { Date } from '../components/Date.tsx';
 import { config } from '../config.tsx';
@@ -39,7 +40,7 @@ export default function FilesRoute() {
   const [opened, { open, close }] = useDisclosure(false);
   const queryClient = useQueryClient();
   const { postageBatchId } = useProfileStore();
-  console.log('rendering files route');
+  const [allowDeletion, setAllowDeletion] = useState(false);
 
   const [fileReferencesQuery, apiKeysQuery] = useQueries({
     queries: [
@@ -62,28 +63,14 @@ export default function FilesRoute() {
     close();
   }
 
-  function hasKey() {
-    return !isLoading && apiKeysQuery.data.length > 0;
-  }
-
-  function openFile(hash: string, isWebsite: boolean) {
-    const firstKey = apiKeysQuery.data.find((k) => k.status === 'ACTIVE');
-    let url = `${config.apiUrl}/files/${hash}`;
-    if (isWebsite) {
-      url = `${url}/`;
-    }
-    url = `${url}?k=${firstKey.apiKey}`;
+  function openFile(hash: string) {
+    const url = `${config.apiUrl}/bzz/${hash}/`;
     window.open(url, '_blank');
   }
 
   function openOnSwarmGateway(hash: string) {
     const url = `https://api.gateway.ethswarm.org/bzz/${hash}/`;
     window.open(url, '_blank');
-  }
-
-  function getFileLink(hash: string) {
-    const firstKey = apiKeysQuery.data.find((k) => k.status === 'ACTIVE');
-    return `${config.apiUrl}/files/${hash}?k=${firstKey.apiKey}`;
   }
 
   function UploadDisabledAlert() {
@@ -107,12 +94,26 @@ export default function FilesRoute() {
     return <IconFileDigit size={'32px'} />;
   }
 
+  async function promptForDeletion(id: number, name: string) {
+    if (window.confirm(`Are you sure you want to delete ${name}?`)) {
+      await api.deleteFileById(id);
+      await queryClient.invalidateQueries({ queryKey: ['files'] });
+    }
+  }
+
   return (
     <>
       <div>
         <h1>Files</h1>
 
-        <Flex justify="flex-end" px={'lg'} py={'xl'}>
+        <Flex justify="flex-end" px={'lg'} py={'xl'} gap={'xs'}>
+          <Button
+            onClick={() => setAllowDeletion((x) => !x)}
+            rightSection={<IconTrash size={'1rem'} />}
+            color="#FF4136"
+          >
+            {allowDeletion ? 'Disable deletion' : 'Enable deletion'}
+          </Button>
           <Button disabled={!canUpload} onClick={open} rightSection={<IconUpload size={'1rem'} />}>
             Upload files
           </Button>
@@ -157,7 +158,7 @@ export default function FilesRoute() {
                       <Table.Td>
                         <CopyButton value={file.hash}>
                           {({ copied, copy }) => (
-                            <Tooltip label={copied ? 'Copied' : 'Copy'} withArrow position="right">
+                            <Tooltip label={copied ? 'Copied' : 'Copy Swarm reference'} withArrow position="right">
                               <ActionIcon color={copied ? 'teal' : 'gray'} variant="subtle" onClick={copy}>
                                 {copied ? (
                                   <IconCheck style={{ width: rem(16) }} />
@@ -168,41 +169,26 @@ export default function FilesRoute() {
                             </Tooltip>
                           )}
                         </CopyButton>
+                        <Tooltip label={'View on Swarmy'} withArrow position="right">
+                          <ActionIcon variant={'subtle'} color={'gray'} onClick={() => openFile(file.hash)}>
+                            <IconExternalLink style={{ width: rem(16) }} />
+                          </ActionIcon>
+                        </Tooltip>
                         <Tooltip label={'View on official Swarm gateway'} withArrow position="right">
                           <ActionIcon variant={'subtle'} color={'gray'} onClick={() => openOnSwarmGateway(file.hash)}>
                             <IconWorldShare style={{ width: rem(16) }} />
                           </ActionIcon>
                         </Tooltip>
-                        <Tooltip label={hasKey() ? 'Open' : 'Create API key to Open'} withArrow position="right">
-                          <ActionIcon
-                            disabled={!hasKey()}
-                            variant={'subtle'}
-                            color={'gray'}
-                            onClick={() => openFile(file.hash, file.isWebsite)}
-                          >
-                            <IconExternalLink style={{ width: rem(16) }} />
-                          </ActionIcon>
-                        </Tooltip>
-                        {hasKey() ? (
-                          <CopyButton value={getFileLink(file.hash)}>
-                            {({ copied, copy }) => (
-                              <Tooltip
-                                label={copied ? 'Copied' : 'Copy full URL with API key'}
-                                withArrow
-                                position="right"
-                              >
-                                <ActionIcon color={copied ? 'teal' : 'gray'} variant="subtle" onClick={copy}>
-                                  {copied ? (
-                                    <IconCheck style={{ width: rem(16) }} />
-                                  ) : (
-                                    <IconShieldShare style={{ width: rem(16) }} />
-                                  )}
-                                </ActionIcon>
-                              </Tooltip>
-                            )}
-                          </CopyButton>
-                        ) : (
-                          <></>
+                        {allowDeletion && (
+                          <Tooltip label={'Remove from Swarmy (stays on Swarm)'} withArrow position="right">
+                            <ActionIcon
+                              variant={'subtle'}
+                              color={'gray'}
+                              onClick={() => promptForDeletion(file.id, file.name)}
+                            >
+                              <IconTrash style={{ width: rem(16) }} />
+                            </ActionIcon>
+                          </Tooltip>
                         )}
                       </Table.Td>
                       <Table.Td>{Numbers.convertBytes(file.size, 1000)}</Table.Td>

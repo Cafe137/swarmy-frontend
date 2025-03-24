@@ -186,6 +186,10 @@ class Api {
     const { data } = await axios.put(`/feeds/${feedId}/${fileId}`);
     return data;
   }
+
+  async deleteFileById(id: number) {
+    await axios.delete(`/files/id/${id}`);
+  }
 }
 
 export const api = new Api();
