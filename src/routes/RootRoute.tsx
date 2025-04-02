@@ -1,17 +1,16 @@
-import { Outlet } from 'react-router-dom';
-import { Notifications } from '@mantine/notifications';
-import { useAuthStore } from '../store/AuthStore.ts';
-import { useQuery } from '@tanstack/react-query';
-import { api } from '../api/Api.ts';
-import React from 'react';
-import { useProfileStore } from '../store/ProfileStore.ts';
-import PublicLayout from '../PublicLayout.tsx';
 import { Center, Loader } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
+import { useQuery } from '@tanstack/react-query';
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import { api } from '../api/Api.ts';
+import PublicLayout from '../PublicLayout.tsx';
+import { useAuthStore } from '../store/AuthStore.ts';
+import { useProfileStore } from '../store/ProfileStore.ts';
 
 export default function RootRoute() {
   const { setProfile } = useProfileStore();
   const { accessToken } = useAuthStore();
-  console.log('rendering root route');
   const {
     data: profileData,
     isFetching,

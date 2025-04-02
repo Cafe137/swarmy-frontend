@@ -5,9 +5,11 @@ import { Plan } from './Plan.tsx';
 interface ActivePlanCardProps {
   isLoading: boolean;
   plan: Plan;
+  postageBatchId?: string;
+  paidUntil?: Date;
 }
 
-export function ActivePlanCard({ plan, isLoading }: ActivePlanCardProps) {
+export function ActivePlanCard({ plan, isLoading, postageBatchId, paidUntil }: ActivePlanCardProps) {
   function getStorageCapacity() {
     const gbs = plan.uploadSizeLimit / 1024 / 1024 / 1024;
     return `${gbs.toFixed(0)} GB`;
@@ -62,6 +64,18 @@ export function ActivePlanCard({ plan, isLoading }: ActivePlanCardProps) {
             <Text fw={600}>Price: </Text>
             {priceLabel()}
           </Group>
+          {paidUntil && (
+            <Group gap={'xs'}>
+              <Text fw={600}>Paid until: </Text>
+              {paidUntil.toLocaleDateString()}
+            </Group>
+          )}
+          {postageBatchId && (
+            <Group gap={'xs'}>
+              <Text fw={600}>Postage batch ID: </Text>
+              {postageBatchId}
+            </Group>
+          )}
           <Space h="lg" />
           <Text size={'sm'} c={'dimmed'}>
             View past invoices, update payment method, or cancel subscription.

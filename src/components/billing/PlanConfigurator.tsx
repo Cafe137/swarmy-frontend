@@ -22,16 +22,19 @@ export function PlanConfigurator() {
   const [bandwidth, setBandwidth] = useState(NaN);
   const [isLoaded, setLoaded] = useState(false);
 
-  const [subscriptionConfigQuery, activePlanQuery] = useQueries({
+  const [subscriptionConfigQuery, activePlanQuery, profileQuery] = useQueries({
     queries: [
       {
         queryKey: ['subscription-config'],
         queryFn: api.getSubscriptionConfig,
       },
-
       {
         queryKey: ['active-plan'],
         queryFn: api.getActivePlan,
+      },
+      {
+        queryKey: ['profile'],
+        queryFn: api.getProfile,
       },
     ],
   });
@@ -48,8 +51,6 @@ export function PlanConfigurator() {
       setCapacity(defaultStorageCapacity);
 
       setLoaded(true);
-      console.log('Config', config);
-      console.log('Active plan', activePlanQuery.data);
     }
   }, [subscriptionConfigQuery.isSuccess, activePlanQuery.isSuccess]);
 
@@ -118,7 +119,12 @@ export function PlanConfigurator() {
 
   return (
     <Container px={0} py="xl">
-      <ActivePlanCard plan={activePlanQuery.data} isLoading={activePlanQuery.isLoading} />
+      <ActivePlanCard
+        plan={activePlanQuery.data}
+        isLoading={activePlanQuery.isLoading}
+        postageBatchId={profileQuery.data?.postageBatchId}
+        paidUntil={activePlanQuery.data.paidUntil ? new Date(activePlanQuery.data.paidUntil) : undefined}
+      />
       <Space h="xl" />
       <ScrollArea miw={700}>
         <Card withBorder bg={'gray.8'} shadow="md" radius="md" padding="xl">
