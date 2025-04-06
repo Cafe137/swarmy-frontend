@@ -6,6 +6,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { api } from '../api/Api.ts';
 import { Date } from '../components/Date.tsx';
+import { EditableApiKey } from '../components/EditableApiKey.tsx';
 
 export default function ApiKeysRoute() {
   const queryClient = useQueryClient();
@@ -29,7 +30,7 @@ export default function ApiKeysRoute() {
       });
     } catch (e) {
       notifications.show({
-        title: 'Login failed',
+        title: 'Failed to generate key',
         message: e.message,
         icon: <IconX style={{ width: rem(20), height: rem(20) }} />,
         color: 'red',
@@ -86,6 +87,7 @@ export default function ApiKeysRoute() {
             <Table verticalSpacing={'md'}>
               <Table.Thead>
                 <Table.Tr>
+                  <Table.Th>Name</Table.Th>
                   <Table.Th>Key</Table.Th>
                   <Table.Th>Date Issued</Table.Th>
                   <Table.Th>Status</Table.Th>
@@ -95,12 +97,15 @@ export default function ApiKeysRoute() {
               <Table.Tbody>
                 {data.map((key) => (
                   <Table.Tr key={key.id}>
+                    <Table.Td>
+                      <EditableApiKey id={key.id} name={key.label} />
+                    </Table.Td>
                     <Table.Td>{key.apiKey}</Table.Td>
                     <Table.Td>
                       <Date value={key.createdAt} />
                     </Table.Td>
                     <Table.Td>{key.status === 'ACTIVE' ? 'Active' : 'Revoked'}</Table.Td>
-                    <Table.Td align={'center'} width={'80px'}>
+                    <Table.Td align={'center'}>
                       <ActionIcon
                         disabled={key.status !== 'ACTIVE'}
                         variant={'subtle'}

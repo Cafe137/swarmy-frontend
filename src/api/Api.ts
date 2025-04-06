@@ -63,6 +63,11 @@ class Api {
     return data;
   }
 
+  async renameApiKey(id: number, name: string) {
+    const { data } = await axios.put(`/api-keys/${id}/rename`, { name });
+    return data;
+  }
+
   async uploadFile(file: File, uploadAsWebsite?: boolean) {
     const formData = new FormData();
     formData.append('file', file);
