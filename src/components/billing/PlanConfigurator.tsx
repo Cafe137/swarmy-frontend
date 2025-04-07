@@ -123,7 +123,7 @@ export function PlanConfigurator() {
         plan={activePlanQuery.data}
         isLoading={activePlanQuery.isLoading}
         postageBatchId={profileQuery.data?.postageBatchId}
-        paidUntil={activePlanQuery.data.paidUntil ? new Date(activePlanQuery.data.paidUntil) : undefined}
+        paidUntil={activePlanQuery.data?.paidUntil ? new Date(activePlanQuery.data.paidUntil) : undefined}
       />
       <Space h="xl" />
       <ScrollArea miw={700}>
