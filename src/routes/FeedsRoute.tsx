@@ -89,7 +89,7 @@ export default function FeedsRoute() {
                 <Table.Tr>
                   <Table.Th>Name</Table.Th>
                   <Table.Th>Feed Address</Table.Th>
-                  <Table.Th>Desination</Table.Th>
+                  <Table.Th>Destination</Table.Th>
                   <Table.Th>Action</Table.Th>
                 </Table.Tr>
               </Table.Thead>
