@@ -39,9 +39,6 @@ export default function RootRoute() {
       ) : (
         <Outlet />
       )}
-
-      {/*<Outlet />*/}
-      {/*<ReactQueryDevtools initialIsOpen={false} />*/}
     </>
   );
 }

@@ -1,52 +1,21 @@
-import { Anchor, AppShell, Button, Flex, Group, Space, Text } from '@mantine/core';
-import { Link, NavLink as RouterNavLink, useLocation } from 'react-router-dom';
-import { IconApps, IconLogin } from '@tabler/icons-react';
-import { Logo } from './Logo.tsx';
-import { Footer } from './Footer.tsx';
-import { useAuthStore } from './store/AuthStore.ts';
+import { Anchor, Text } from '@mantine/core';
 import { CookieConsent } from 'react-cookie-consent';
-import UserMenu from './UserMenu.tsx';
-import { useProfileStore } from './store/ProfileStore.ts';
-import { AppIcon } from './AppIcon.tsx';
+import { NavLink as RouterNavLink } from 'react-router-dom';
+import { Footer } from './Footer';
+import { Header } from './Header';
+import { Vertical } from './utility/Vertical';
 
 export default function PublicLayout({ children }) {
-  const signedIn = useAuthStore((state) => state.signedIn());
-  const { emailVerified } = useProfileStore();
-  const location = useLocation();
-
   return (
-    <AppShell header={{ height: 60 }} padding="md">
-      <AppShell.Header>
-        <Flex justify="space-between" align="center" ml={10}>
-          <Anchor style={{ textDecoration: 'none' }} size="sm" component={RouterNavLink} to={'/'}>
-            <Group gap={8}>
-              <AppIcon s={40} />
-              <Logo w={100} mt={4} />
-            </Group>
-          </Anchor>
-          <Flex mr={20} mih={60} gap="md" justify="end" align="center" direction="row" wrap="wrap">
-            {signedIn ? (
-              <Button disabled={!emailVerified} component={Link} to={'/app'} rightSection={<IconApps size={20} />}>
-                App
-              </Button>
-            ) : (
-              <Button component={Link} to={'/login'} rightSection={<IconLogin size={20} />}>
-                Sign in
-              </Button>
-            )}
-
-            {signedIn && <UserMenu />}
-          </Flex>
-        </Flex>
-      </AppShell.Header>
-
-      <AppShell.Main {...(location.pathname === '/' ? { p: 0 } : {})}>
-        {children}
-        <Space h={'xl'} />
-      </AppShell.Main>
+    <>
+      <Vertical gap={40}>
+        <Header />
+        <main>{children}</main>
+        <Footer />
+      </Vertical>
       <CookieConsent
         buttonStyle={{
-          background: 'rgb(12, 159, 86)',
+          background: 'rgb(249, 115, 22)',
           color: 'white',
           fontWeight: 700,
           borderRadius: '5px',
@@ -61,10 +30,6 @@ export default function PublicLayout({ children }) {
           .
         </Text>
       </CookieConsent>
-
-      <AppShell.Footer>
-        <Footer />
-      </AppShell.Footer>
-    </AppShell>
+    </>
   );
 }

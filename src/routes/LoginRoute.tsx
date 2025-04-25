@@ -1,11 +1,12 @@
+import { Anchor, Button, Group, PasswordInput, rem, Text, TextInput } from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { notifications } from '@mantine/notifications';
+import { IconX } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../api/Api';
 import PublicLayout from '../PublicLayout';
-import { Anchor, Button, Container, Group, Paper, PasswordInput, rem, Text, TextInput, Title } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
-import { IconX } from '@tabler/icons-react';
 import { useAuthStore } from '../store/AuthStore.ts';
-import { useForm } from '@mantine/form';
+import { Vertical } from '../utility/Vertical.tsx';
 
 export default function LoginRoute() {
   const navigate = useNavigate();
@@ -41,17 +42,23 @@ export default function LoginRoute() {
 
   return (
     <PublicLayout>
-      <Container size={420} my={10}>
-        <Title ta="center">Welcome!</Title>
-        <Text c="dimmed" size="sm" ta="center" mt={5}>
+      <Vertical center gap={20} p={20}>
+        <h2>Welcome!</h2>
+        <Text c="dimmed" size="sm" ta="center">
           Do not have an account yet?{' '}
           <Anchor size="sm" component={Link} to={'/signup'}>
             Create account
           </Anchor>
         </Text>
 
-        <form onSubmit={form.onSubmit((values) => onLoginPressed(values))}>
-          <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+        <Vertical
+          width={640}
+          p={40}
+          border="1px solid rgb(249, 115, 22)"
+          borderRadius={12}
+          background="rgb(21, 26, 33)"
+        >
+          <form onSubmit={form.onSubmit((values) => onLoginPressed(values))}>
             <TextInput
               label="Email"
               placeholder="Your email"
@@ -68,7 +75,6 @@ export default function LoginRoute() {
               {...form.getInputProps('password')}
             />
             <Group justify="end" mt="lg">
-              {/*<Checkbox label="Remember me"/>*/}
               <Anchor component={Link} to={'/forgot-password'} size="sm">
                 Forgot password?
               </Anchor>
@@ -76,9 +82,9 @@ export default function LoginRoute() {
             <Button fullWidth mt="xl" type="submit">
               Sign in
             </Button>
-          </Paper>
-        </form>
-      </Container>
+          </form>
+        </Vertical>
+      </Vertical>
     </PublicLayout>
   );
 }

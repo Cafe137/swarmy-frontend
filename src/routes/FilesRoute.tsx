@@ -1,3 +1,4 @@
+import { Reference } from '@ethersphere/bee-js';
 import {
   ActionIcon,
   Alert,
@@ -68,8 +69,9 @@ export default function FilesRoute() {
     window.open(url, '_blank');
   }
 
-  function openOnSwarmGateway(hash: string) {
-    const url = `https://api.gateway.ethswarm.org/bzz/${hash}/`;
+  function openOnGateway(hash: string) {
+    const cid = new Reference(hash).toCid('manifest');
+    const url = `https://${cid}.bzz.limo`;
     window.open(url, '_blank');
   }
 
@@ -174,8 +176,8 @@ export default function FilesRoute() {
                             <IconExternalLink style={{ width: rem(16) }} />
                           </ActionIcon>
                         </Tooltip>
-                        <Tooltip label={'View on official Swarm gateway'} withArrow position="right">
-                          <ActionIcon variant={'subtle'} color={'gray'} onClick={() => openOnSwarmGateway(file.hash)}>
+                        <Tooltip label={'View on bzz.limo gateway'} withArrow position="right">
+                          <ActionIcon variant={'subtle'} color={'gray'} onClick={() => openOnGateway(file.hash)}>
                             <IconWorldShare style={{ width: rem(16) }} />
                           </ActionIcon>
                         </Tooltip>

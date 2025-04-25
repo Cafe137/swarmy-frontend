@@ -38,7 +38,6 @@ function App() {
   ];
 
   const redColors: MantineColorsTuple = [
-    // "#EF767A"
     '#FEE1E2',
     '#FDD1D2',
     '#FCC1C3',
@@ -50,12 +49,6 @@ function App() {
     '#C45A5D',
     '#974042',
   ];
-  // const blueColors: MantineColorsTuple = [
-  //   "#007C77"
-  // ]
-  // const orangeColors: MantineColorsTuple = [
-  //   "#EEB868"
-  // ]
 
   const darkColors: MantineColorsTuple = [
     '#e1e3e1',
@@ -74,11 +67,9 @@ function App() {
     colors: {
       green: greenColors,
       red: redColors,
-      // blue: blueColors,
-      // orange: orangeColors,
       dark: darkColors,
     },
-    primaryColor: 'green',
+    primaryColor: 'orange',
     primaryShade: 6,
   });
 

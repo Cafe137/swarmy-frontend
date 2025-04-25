@@ -1,11 +1,6 @@
-export function SwarmLogo({ className, height }) {
+export function SwarmLogo({ height }) {
   return (
-    <svg
-      height={height}
-      className={className}
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 4222.16 1115"
-    >
+    <svg height={height} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4222.16 1115" fill="#ffffff">
       <path d="M0 665.01V965l260 150 260-150.01V664.96L260 515 0 665.01zM855 515 595 665v299.99L855 1115l260-150.01V664.95L855 515zM817.32 300.27l-129.91-75.25-.13-149.98L557.5 0 297.68 150.01V450L557.5 600l259.82-150V300.27z"></path>
       <path d="m817.32 300.27 129.91-75.3V75L817.52 0 687.28 75.04l130.24 74.83-.2 150.4z"></path>
       <g>

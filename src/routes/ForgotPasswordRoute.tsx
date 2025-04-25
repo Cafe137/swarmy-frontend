@@ -1,12 +1,13 @@
-import { Paper, Title, Text, TextInput, Button, Container, Group, Anchor, Center, Box, rem } from '@mantine/core';
-import { IconArrowLeft, IconX } from '@tabler/icons-react';
-import classes from './ForgotPassword.module.css';
-import PublicLayout from '../PublicLayout.tsx';
-import { Link } from 'react-router-dom';
+import { Anchor, Box, Button, Center, Container, Group, rem, Text, TextInput, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { api } from '../api/Api.ts';
 import { notifications } from '@mantine/notifications';
+import { IconArrowLeft, IconX } from '@tabler/icons-react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { api } from '../api/Api.ts';
+import PublicLayout from '../PublicLayout.tsx';
+import { Vertical } from '../utility/Vertical.tsx';
+import classes from './ForgotPassword.module.css';
 
 export function ForgotPasswordRoute() {
   const [submitted, setSubmitted] = useState(false);
@@ -48,7 +49,9 @@ export function ForgotPasswordRoute() {
           <Title className={classes.title} ta="center">
             Password reset link was sent to
           </Title>
-          <Text fw={700} size={'xl'} c={'green'} ta="center">{form.getValues().email}</Text>
+          <Text fw={700} size={'xl'} c={'orange'} ta="center">
+            {form.getValues().email}
+          </Text>
           <Text mt={'md'} c="dimmed" fz="sm" ta="center">
             Click the reset button in the email in the next 60 minutes to reset your password.
           </Text>
@@ -59,16 +62,20 @@ export function ForgotPasswordRoute() {
 
   return (
     <PublicLayout>
-      <Container size={460} my={30}>
-        <Title className={classes.title} ta="center">
-          Forgot your password?
-        </Title>
+      <Vertical center gap={20} p={20}>
+        <h2>Forgot your password?</h2>
         <Text c="dimmed" fz="sm" ta="center">
           Enter your email to get a reset link
         </Text>
 
-        <form onSubmit={form.onSubmit((values) => onSubmit(values))}>
-          <Paper withBorder shadow="md" p={30} radius="md" mt="xl">
+        <Vertical
+          width={640}
+          p={40}
+          border="1px solid rgb(249, 115, 22)"
+          borderRadius={12}
+          background="rgb(21, 26, 33)"
+        >
+          <form onSubmit={form.onSubmit((values) => onSubmit(values))}>
             <TextInput
               type="email"
               label="Your email"
@@ -88,9 +95,9 @@ export function ForgotPasswordRoute() {
                 Reset password
               </Button>
             </Group>
-          </Paper>
-        </form>
-      </Container>
+          </form>
+        </Vertical>
+      </Vertical>
     </PublicLayout>
   );
 }

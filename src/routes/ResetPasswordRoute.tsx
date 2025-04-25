@@ -1,11 +1,12 @@
-import { Button, Container, Paper, PasswordInput, rem, Title } from '@mantine/core';
-import { IconCheck, IconX } from '@tabler/icons-react';
-import PublicLayout from '../PublicLayout.tsx';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Button, PasswordInput, rem } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { api } from '../api/Api.ts';
 import { notifications } from '@mantine/notifications';
+import { IconCheck, IconX } from '@tabler/icons-react';
 import { useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { api } from '../api/Api.ts';
+import PublicLayout from '../PublicLayout.tsx';
+import { Vertical } from '../utility/Vertical.tsx';
 
 export function ResetPasswordRoute() {
   const navigate = useNavigate();
@@ -60,11 +61,17 @@ export function ResetPasswordRoute() {
 
   return (
     <PublicLayout>
-      <Container size={480} my={10}>
-        <Title ta="center">Reset password</Title>
+      <Vertical center gap={20} p={20}>
+        <h2>Reset password</h2>
 
-        <form onSubmit={form.onSubmit((values) => onSubmit(values))}>
-          <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+        <Vertical
+          width={640}
+          p={40}
+          border="1px solid rgb(249, 115, 22)"
+          borderRadius={12}
+          background="rgb(21, 26, 33)"
+        >
+          <form onSubmit={form.onSubmit((values) => onSubmit(values))}>
             <PasswordInput
               label="Password"
               placeholder="Your password"
@@ -84,9 +91,9 @@ export function ResetPasswordRoute() {
             <Button disabled={submitting} fullWidth mt="xl" type="submit">
               Submit
             </Button>
-          </Paper>
-        </form>
-      </Container>
+          </form>
+        </Vertical>
+      </Vertical>
     </PublicLayout>
   );
 }

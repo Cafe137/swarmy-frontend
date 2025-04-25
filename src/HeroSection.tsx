@@ -1,83 +1,202 @@
-import { Anchor, Button, Flex, Group, Space, Text } from '@mantine/core';
-import { useEffect } from 'react';
-import { NavLink as RouterNavLink, useLocation } from 'react-router-dom';
+import { BatchId, Reference } from '@ethersphere/bee-js';
+import { Anchor, Button, Text, TextInput } from '@mantine/core';
+import axios from 'axios';
+import { Numbers } from 'cafe-utility';
+import { useEffect, useState } from 'react';
+import { NavLink as RouterNavLink } from 'react-router-dom';
 import { AppIcon } from './AppIcon.tsx';
-import classes from './HeroSection.module.css';
+import { HexagonText } from './HexagonText.tsx';
 import { Logo } from './Logo.tsx';
+import { StyledH2 } from './StyledH2.tsx';
 import { SwarmLogo } from './SwarmLogo.tsx';
 import { useAuthStore } from './store/AuthStore.ts';
+import { Horizontal } from './utility/Horizontal.tsx';
+import { Vertical } from './utility/Vertical.tsx';
+
+interface Stats {
+  uploadedFiles: number;
+  downloaded: string;
+  latency: string;
+  storagePrice: number;
+  postageBatches: number;
+  population: number;
+}
 
 export function HeroSection() {
-  const { pathname } = useLocation();
+  const [stats, setStats] = useState<Stats>({
+    uploadedFiles: 21746,
+    downloaded: '348413998',
+    latency: '110.2396',
+    storagePrice: 29943,
+    postageBatches: 1714,
+    population: 13804,
+  });
+  const [reference, setReference] = useState<string>('');
+  const [batchId, setBatchId] = useState<string>('');
+
   const signedIn = useAuthStore((state) => state.signedIn());
 
   useEffect(() => {
-    if (pathname !== '/') {
-      return;
-    }
-    const effect = VANTA.TOPOLOGY({
-      el: '#hero-canvas',
-      mouseControls: true,
-      touchControls: true,
-      gyroControls: false,
-      minHeight: 200.0,
-      minWidth: 200.0,
-      scale: 3.0,
-      scaleMobile: 3.0,
-      color: '#1ee783',
-      backgroundColor: '#1d252c',
+    axios.defaults.baseURL = import.meta.env.VITE_API_URL;
+    axios.get('/stats').then((response) => {
+      setStats(response.data);
     });
-    return () => effect.destroy();
-  }, [pathname]);
+  }, []);
+
+  async function onCheck() {
+    const cid = new Reference(reference).toCid('manifest');
+    window.open(`https://${cid}.bzz.limo`, '_blank');
+  }
+
+  async function onBatch() {
+    const id = new BatchId(batchId);
+    window.open(`https://bzz.limo/batch/${id.toHex()}`, '_blank');
+  }
 
   return (
-    <Flex>
-      <div id="hero-canvas" className={classes.heroCanvas}></div>
+    <Vertical p={20} gap={80} center>
+      <Vertical
+        width={640}
+        gap={20}
+        p={40}
+        border="1px solid rgb(249, 115, 22)"
+        borderRadius={12}
+        background="rgb(21, 26, 33)"
+      >
+        <Horizontal gap={10} center>
+          <AppIcon s={90} />
+          <Logo w={256} />
+        </Horizontal>
+        <Horizontal>
+          <Text fz={18} fw={600} mr={10} c={'white'}>
+            A
+          </Text>
+          <SwarmLogo height={28} />
+          <Text fz={20} fw={600} c={'white'}>
+            &nbsp; as a service solution
+          </Text>
+        </Horizontal>
 
-      <div className={classes.inner}>
-        <div>
-          <Flex justify={'flex-start'} align={'start'} direction={'column'} className={classes.title}>
-            <Flex justify={'center'} align={'center'}>
-              <AppIcon s={90} />
-              <Logo w={256} mt={16} ml={10} />
-            </Flex>
+        <Text fz={18} fw={400}>
+          A service that makes it simple to store and retrieve media on{' '}
+          <Anchor fz={18} target={'_blank'} href={'https://www.ethswarm.org/'}>
+            Swarm
+          </Anchor>
+          .
+        </Text>
 
-            <Space h={'xl'} />
-            <Flex className={classes.subTitle} align={'end'}>
-              <Text fz={18} fw={600} mr={10} c={'white'}>
-                A
-              </Text>
-              <SwarmLogo className={classes.logo} height={28} />
-              <Text fz={20} fw={600} c={'white'}>
-                &nbsp; as a service solution
-              </Text>
-            </Flex>
-
-            <Flex mt={'sm'} direction={'column'}>
-              <Text fz={18} fw={400}>
-                A service that makes it simple to store and retrieve media on{' '}
-                <Anchor fz={18} target={'_blank'} href={'https://www.ethswarm.org/'}>
-                  Swarm
-                </Anchor>
-                .
-              </Text>
-
-              <Group mt={30}>
-                <Button
-                  radius="sm"
-                  size="md"
-                  className={classes.control}
-                  component={RouterNavLink}
-                  to={signedIn ? '/app' : '/signup'}
-                >
-                  {signedIn ? 'Go to dashboard' : 'Get started'}
-                </Button>
-              </Group>
-            </Flex>
-          </Flex>
-        </div>
-        {/*<Image src={image.src} className={classes.image} />*/}
-      </div>
-    </Flex>
+        <Button radius="sm" size="md" component={RouterNavLink} to={signedIn ? '/app' : '/signup'}>
+          {signedIn ? 'Go to dashboard' : 'Sign up'}
+        </Button>
+      </Vertical>
+      <Vertical gap={20} width={640}>
+        <StyledH2>Features</StyledH2>
+        <HexagonText>Pay with credit card or crypto</HexagonText>
+        <HexagonText>Upload and download files and folders</HexagonText>
+        <HexagonText>Use with the Swarmy UI or via API</HexagonText>
+        <HexagonText>Host websites and set up ENS</HexagonText>
+        <HexagonText>Create and manage Swarm feeds</HexagonText>
+      </Vertical>
+      <Vertical
+        width={640}
+        gap={20}
+        p={40}
+        border="1px solid rgb(249, 115, 22)"
+        borderRadius={12}
+        background="rgb(21, 26, 33)"
+      >
+        <h2>Quick Access</h2>
+        <TextInput
+          placeholder="Swarm reference"
+          value={reference}
+          onChange={(e) => setReference(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              onCheck();
+            }
+          }}
+        />
+        <Button radius="sm" onClick={onCheck}>
+          Check
+        </Button>
+      </Vertical>
+      <Vertical gap={20} width={640}>
+        <StyledH2>Statistics</StyledH2>
+        <Horizontal>
+          <Text fz={24} fw={600} c="orange">
+            {stats.uploadedFiles.toLocaleString()}
+          </Text>
+          <Text fz={18} fw={400}>
+            &nbsp; uploaded files
+          </Text>
+        </Horizontal>
+        <Horizontal>
+          <Text fz={24} fw={600} c="orange">
+            {Numbers.convertBytes(Number(stats.downloaded))}
+          </Text>
+          <Text fz={18} fw={400}>
+            &nbsp; downloaded
+          </Text>
+        </Horizontal>
+        <Horizontal>
+          <Text fz={24} fw={600} c="orange">
+            {stats.latency} ms
+          </Text>
+          <Text fz={18} fw={400}>
+            &nbsp; average download latency
+          </Text>
+        </Horizontal>
+      </Vertical>
+      <Vertical
+        width={640}
+        gap={20}
+        p={40}
+        border="1px solid rgb(249, 115, 22)"
+        borderRadius={12}
+        background="rgb(21, 26, 33)"
+      >
+        <h2>Lookup Batch</h2>
+        <TextInput
+          placeholder="Batch ID"
+          value={batchId}
+          onChange={(e) => setBatchId(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              onBatch();
+            }
+          }}
+        />
+        <Button radius="sm" onClick={onBatch}>
+          Check
+        </Button>
+      </Vertical>
+      <Vertical gap={20} width={640}>
+        <StyledH2>Network</StyledH2>
+        <Horizontal>
+          <Text fz={24} fw={600} c="orange">
+            {stats.population.toLocaleString()}
+          </Text>
+          <Text fz={18} fw={400}>
+            &nbsp; population
+          </Text>
+        </Horizontal>
+        <Horizontal>
+          <Text fz={24} fw={600} c="orange">
+            {stats.storagePrice.toLocaleString()}
+          </Text>
+          <Text fz={18} fw={400}>
+            &nbsp; storage price
+          </Text>
+        </Horizontal>
+        <Horizontal>
+          <Text fz={24} fw={600} c="orange">
+            {stats.postageBatches.toLocaleString()}
+          </Text>
+          <Text fz={18} fw={400}>
+            &nbsp; postage batches
+          </Text>
+        </Horizontal>
+      </Vertical>
+    </Vertical>
   );
 }

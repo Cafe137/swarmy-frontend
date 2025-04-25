@@ -16,14 +16,10 @@ export function Logo({ w = 250, h = 56, color = 'white', link = false, ...rest }
   if (link) {
     return (
       <Anchor style={{ textDecoration: 'none' }} size="sm" component={RouterNavLink} to={'/'}>
-        <Image fit={'contain'} w={w} h={h} src={textUrl}  {...rest}/>
+        <Image fit={'contain'} w={w} h={h} src={textUrl} {...rest} />
       </Anchor>
     );
   }
 
-  return (
-    <>
-      <Image fit={'contain'} w={w} h={h} src={textUrl} {...rest} />
-    </>
-  );
+  return <Image fit={'contain'} w={w} h={h} src={textUrl} {...rest} />;
 }
