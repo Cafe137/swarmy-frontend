@@ -1,4 +1,4 @@
-import { AppShell, Burger, em, Flex, Group, NavLink, Space } from '@mantine/core';
+import { Anchor, AppShell, Burger, em, Flex, Group, NavLink, Space } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import {
   IconBrandDiscord,
@@ -34,9 +34,9 @@ export default function LoggedInLayout({ children }) {
           <Flex mt={6} justify="space-between" align="center" px={'md'}>
             <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
             {isMobile ? (
-              <Group gap={8}>
+              <Anchor style={{ textDecoration: 'none' }} size="sm" component={RouterNavLink} to={'/'}>
                 <Logo w={100} />
-              </Group>
+              </Anchor>
             ) : (
               <div></div>
             )}
@@ -46,10 +46,12 @@ export default function LoggedInLayout({ children }) {
 
         <AppShell.Navbar>
           <Flex justify={'center'} align={'center'} gap={6}>
-            <Group mt={10} gap={8}>
-              <AppIcon s={40} />
-              <Logo w={100} />
-            </Group>
+            <Anchor style={{ textDecoration: 'none' }} size="sm" component={RouterNavLink} to={'/'}>
+              <Group mt={10} gap={8}>
+                <AppIcon s={40} />
+                <Logo w={100} />
+              </Group>
+            </Anchor>
           </Flex>
 
           <Space h="xl" />
