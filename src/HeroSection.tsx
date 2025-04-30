@@ -1,5 +1,6 @@
 import { BatchId, Reference } from '@ethersphere/bee-js';
 import { Anchor, Button, Text, TextInput } from '@mantine/core';
+import { IconInfoCircle } from '@tabler/icons-react';
 import axios from 'axios';
 import { Numbers } from 'cafe-utility';
 import { useEffect, useState } from 'react';
@@ -106,6 +107,15 @@ export function HeroSection() {
         background="rgb(21, 26, 33)"
       >
         <h2>Quick Access</h2>
+        <Horizontal nowrap top gap={5}>
+          <Vertical pt={1} width={30}>
+            <IconInfoCircle color="#959D9B" size={30} />
+          </Vertical>
+          <Text>
+            Enter any Swarm reference to download or open it in your browser. This feature will be limited to small
+            files in the future. The format is 64 hex characters.
+          </Text>
+        </Horizontal>
         <TextInput
           placeholder="Swarm reference"
           value={reference}
@@ -156,6 +166,12 @@ export function HeroSection() {
         background="rgb(21, 26, 33)"
       >
         <h2>Lookup Batch</h2>
+        <Horizontal nowrap top gap={5}>
+          <Vertical pt={1} width={30}>
+            <IconInfoCircle color="#959D9B" size={30} />
+          </Vertical>
+          <Text>Enter any postage batch ID to view its information as a JSON. The format is 64 hex characters.</Text>
+        </Horizontal>
         <TextInput
           placeholder="Batch ID"
           value={batchId}

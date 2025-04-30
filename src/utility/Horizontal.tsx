@@ -12,6 +12,8 @@ interface Props {
   borderBottom?: string;
   background?: string;
   between?: boolean;
+  nowrap?: boolean;
+  top?: boolean;
 }
 
 export function Horizontal({
@@ -28,6 +30,8 @@ export function Horizontal({
   borderBottom,
   background,
   between,
+  nowrap,
+  top,
 }: Props) {
   const style = {
     display: 'flex',
@@ -39,9 +43,9 @@ export function Horizontal({
     paddingRight: px || p,
     marginTop: mt,
     marginLeft: ml,
-    alignItems: 'center',
+    alignItems: top ? 'flex-start' : 'center',
     justifyContent: center ? 'center' : right ? 'flex-end' : between ? 'space-between' : 'flex-start',
-    flexWrap: 'wrap' as 'wrap',
+    flexWrap: (nowrap ? 'nowrap' : 'wrap') as 'nowrap' | 'wrap',
     borderTop,
     borderBottom,
     background,
